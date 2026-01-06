@@ -37,6 +37,31 @@ export default function ChatPage() {
    }, [userId]);
 
    const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+   const [inputValue, setInputValue] = useState('');
+
+   const handleSendMessage = () => {
+      if (!inputValue.trim()) return;
+
+      const newMessage = {
+         id: `msg_${Date.now()}`,
+         senderId: 'me',
+         text: inputValue,
+         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setSessions(prev => prev.map(s => {
+         if (s.id === activeSession.id) {
+            return {
+               ...s,
+               messages: [...s.messages, newMessage],
+               lastMessage: 'Bạn: ' + inputValue,
+               unreadCount: 0
+            };
+         }
+         return s;
+      }));
+      setInputValue('');
+   };
 
    return (
       <div className="h-screen w-full bg-[#F8F9FC] flex flex-col overflow-hidden">
@@ -109,11 +134,14 @@ export default function ChatPage() {
                         <input
                            type="text"
                            placeholder="Nhập tin nhắn..."
+                           value={inputValue}
+                           onChange={(e) => setInputValue(e.target.value)}
+                           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                            className="w-full bg-gray-100 rounded-full pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50"
                         />
                         <Smile size={18} className="absolute right-3 top-2.5 text-gray-400" />
                      </div>
-                     <Button className="rounded-full w-10 h-10 p-0 flex-shrink-0"><Send size={16} /></Button>
+                     <Button onClick={handleSendMessage} className="rounded-full w-10 h-10 p-0 flex-shrink-0"><Send size={16} /></Button>
                   </div>
                </div>
 
