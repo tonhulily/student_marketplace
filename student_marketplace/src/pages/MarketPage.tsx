@@ -4,113 +4,143 @@ import Header from '../components/Header'; // Import Header
 import { Filter, ShieldCheck } from 'lucide-react';
 import { PRODUCTS, Product } from '../mock/data';
 
+import VerifiedBadge from '../components/VerifiedBadge';
+
 export default function MarketPage() {
-  const [filterPrice, setFilterPrice] = useState<number>(1000000); 
+   const [priceRange, setPriceRange] = useState<{ min: number, max: number }>({ min: 0, max: 5000000 });
 
-  const filteredProducts = PRODUCTS.filter(p => p.price <= filterPrice);
+   const filteredProducts = PRODUCTS.filter(p => p.price >= priceRange.min && p.price <= priceRange.max);
 
-  return (
-    <div className="min-h-screen bg-[#F8F9FC] flex flex-col">
-      {/* 1. SỬ DỤNG HEADER CHUNG */}
-      <Header />
+   return (
+      <div className="min-h-screen bg-[#F8F9FC] flex flex-col">
+         {/* 1. SỬ DỤNG HEADER CHUNG */}
+         <Header />
 
-      {/* BODY CONTENT */}
-      <div className="flex-1 max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-12 gap-8 w-full pb-20">
-        
-        {/* SIDEBAR FILTER */}
-        <aside className="md:col-span-3 space-y-6">
-          <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 sticky top-24">
-             <div className="flex items-center gap-2 mb-6 text-violet-700 font-bold">
-                <Filter size={20} /> Bộ lọc tìm kiếm
-             </div>
-             
-             {/* Price Filter */}
-             <div className="mb-8">
-                <label className="block text-sm font-bold text-gray-700 mb-4">Khoảng giá tối đa</label>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="5000000" 
-                  step="50000"
-                  value={filterPrice}
-                  onChange={(e) => setFilterPrice(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
-                />
-                <div className="flex justify-between mt-2 font-bold text-sm">
-                   <span className="text-gray-400">0đ</span>
-                   <span className="text-violet-600">{filterPrice.toLocaleString('vi-VN')}đ</span>
-                </div>
-             </div>
+         {/* BODY CONTENT */}
+         <div className="flex-1 max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-12 gap-8 w-full pb-20">
 
-             {/* Categories */}
-             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-3">Danh mục</label>
-                <div className="space-y-2">
-                   {['Tất cả', 'Sách/Tài liệu', 'Công nghệ', 'Nội thất', 'Thời trang'].map(cat => (
-                      <label key={cat} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
-                         <input type="checkbox" className="w-5 h-5 rounded text-violet-600 focus:ring-violet-500 border-gray-300"/>
-                         <span className="text-gray-600 font-medium">{cat}</span>
-                      </label>
-                   ))}
-                </div>
-             </div>
-          </div>
-        </aside>
+            {/* SIDEBAR FILTER */}
+            <aside className="md:col-span-3 space-y-6">
+               <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 sticky top-24">
+                  <div className="flex items-center gap-2 mb-6 text-violet-700 font-bold">
+                     <Filter size={20} /> Bộ lọc tìm kiếm
+                  </div>
 
-        {/* PRODUCT GRID */}
-        <main className="md:col-span-9">
-           <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Dành cho bạn</h2>
-              <select className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-violet-200">
-                 <option>Mới nhất</option>
-                 <option>Giá thấp đến cao</option>
-                 <option>Gần tôi nhất</option>
-              </select>
-           </div>
+                  {/* Price Filter */}
+                  <div className="mb-8">
+                     <label className="block text-sm font-bold text-gray-700 mb-4">Khoảng giá</label>
+                     <div className="space-y-4">
+                        <div>
+                           <div className="flex justify-between text-xs text-gray-500 mb-1">
+                              <span>Tối thiểu</span>
+                              <span className="font-bold text-violet-600">{priceRange.min.toLocaleString('vi-VN')}đ</span>
+                           </div>
+                           <input
+                              type="range"
+                              min="0"
+                              max="5000000"
+                              step="50000"
+                              value={priceRange.min}
+                              onChange={(e) => {
+                                 const val = Number(e.target.value);
+                                 if (val <= priceRange.max) setPriceRange({ ...priceRange, min: val });
+                              }}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
+                           />
+                        </div>
+                        <div>
+                           <div className="flex justify-between text-xs text-gray-500 mb-1">
+                              <span>Tối đa</span>
+                              <span className="font-bold text-violet-600">{priceRange.max.toLocaleString('vi-VN')}đ</span>
+                           </div>
+                           <input
+                              type="range"
+                              min="0"
+                              max="5000000"
+                              step="50000"
+                              value={priceRange.max}
+                              onChange={(e) => {
+                                 const val = Number(e.target.value);
+                                 if (val >= priceRange.min) setPriceRange({ ...priceRange, max: val });
+                              }}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
+                           />
+                        </div>
+                     </div>
+                  </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map(product => (
-                 <ProductCard key={product.id} product={product} />
-              ))}
-           </div>
-        </main>
+                  {/* Categories */}
+                  <div>
+                     <label className="block text-sm font-bold text-gray-700 mb-3">Danh mục</label>
+                     <div className="space-y-2">
+                        {['Tất cả', 'Sách/Tài liệu', 'Công nghệ', 'Nội thất', 'Thời trang'].map(cat => (
+                           <label key={cat} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
+                              <input type="checkbox" className="w-5 h-5 rounded text-violet-600 focus:ring-violet-500 border-gray-300" />
+                              <span className="text-gray-600 font-medium">{cat}</span>
+                           </label>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+            </aside>
+
+            {/* PRODUCT GRID */}
+            <main className="md:col-span-9">
+               <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800">Dành cho bạn</h2>
+                  <select className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-violet-200">
+                     <option>Mới nhất</option>
+                     <option>Giá thấp đến cao</option>
+                     <option>Gần tôi nhất</option>
+                  </select>
+               </div>
+
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map(product => (
+                     <ProductCard key={product.id} product={product} />
+                  ))}
+               </div>
+            </main>
+         </div>
       </div>
-    </div>
-  );
+   );
 }
 
 // Sub-component: Product Card (Giữ nguyên logic cũ)
 function ProductCard({ product }: { product: Product }) {
-  const isSold = product.status === 'sold';
-  return (
-    <Link to={`/product/${product.id}`} className="block group h-full">
-      <div className={`bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden relative h-full flex flex-col ${isSold ? 'opacity-70 grayscale' : ''}`}>
-         <div className="absolute top-4 left-4 z-10">
-            {isSold ? (
-               <span className="bg-gray-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Đã bán</span>
-            ) : (
-               <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg shadow-green-500/30">Còn hàng</span>
-            )}
-         </div>
-         <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100 relative">
-            <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
-         </div>
-         <div className="p-5 flex flex-col flex-1">
-            <div className="flex justify-between items-start mb-2">
-               <span className="text-xs font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-md mb-2 inline-block">{product.category}</span>
-               <span className="text-xs text-gray-400 font-medium">{product.postedAt}</span>
+   const isSold = product.status === 'sold';
+   return (
+      <Link to={`/product/${product.id}`} className="block group h-full">
+         <div className={`bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden relative h-full flex flex-col ${isSold ? 'opacity-70 grayscale' : ''}`}>
+            <div className="absolute top-4 left-4 z-10">
+               {isSold ? (
+                  <span className="bg-gray-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Đã bán</span>
+               ) : (
+                  <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg shadow-green-500/30">Còn hàng</span>
+               )}
             </div>
-            <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2 min-h-[3.5rem] leading-tight">{product.title}</h3>
-            <div className="text-xl font-black text-pink-500 mb-4">{product.price.toLocaleString('vi-VN')}đ</div>
-            <div className="mt-auto flex items-center gap-3 pt-4 border-t border-gray-50">
-               <img src={product.seller.avatar} alt="seller" className="w-8 h-8 rounded-full border border-gray-200" />
-               <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-gray-700 truncate">{product.seller.name}</p>
-                  <p className="text-[10px] text-gray-400 truncate flex items-center gap-1"><ShieldCheck size={10} className="text-green-500"/>{product.seller.school}</p>
+            <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100 relative">
+               <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div className="p-5 flex flex-col flex-1">
+               <div className="flex justify-between items-start mb-2">
+                  <span className="text-xs font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-md mb-2 inline-block">{product.category}</span>
+                  <span className="text-xs text-gray-400 font-medium">{product.postedAt}</span>
+               </div>
+               <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2 min-h-[3.5rem] leading-tight">{product.title}</h3>
+               <div className="text-xl font-black text-pink-500 mb-4">{product.price.toLocaleString('vi-VN')}đ</div>
+               <div className="mt-auto flex items-center gap-3 pt-4 border-t border-gray-50">
+                  <img src={product.seller.avatar} alt="seller" className="w-8 h-8 rounded-full border border-gray-200" />
+                  <div className="flex-1 min-w-0">
+                     <p className="text-xs font-bold text-gray-700 truncate">{product.seller.name}</p>
+                     <div className="flex items-center gap-1 mt-0.5">
+                        <VerifiedBadge schoolName={product.seller.school} />
+                        <span className="text-[10px] text-gray-400">Đã xác thực</span>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-    </Link>
-  );
+      </Link>
+   );
 }
