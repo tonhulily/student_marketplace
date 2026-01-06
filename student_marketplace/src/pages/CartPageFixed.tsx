@@ -2,11 +2,20 @@ import React from 'react';
 import { useCart } from '../contexts/CartContext';
 import Header from '../components/Header';
 import Button from '../components/Button';
-import { Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Trash2, ArrowRight, ShoppingBag, Truck, Minus, Plus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function CartPage() {
-    const { cartItems, removeFromCart, totalPrice } = useCart();
+    const { cartItems, removeFromCart, totalPrice, updateQuantity, clearCart } = useCart();
+    const navigate = useNavigate();
+
+    const handlePlaceOrder = () => {
+        if (confirm('Xác nhận đặt hàng? Đơn hàng sẽ được gửi đến Green2Xpress.')) {
+            clearCart();
+            alert('Đặt hàng thành công! Cảm ơn bạn đã sử dụng Green2Hand.');
+            navigate('/market');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#F8F9FC] pb-20">
@@ -42,8 +51,23 @@ export default function CartPage() {
                                     <div className="flex-1 min-w-0">
                                         <h3 className="font-bold text-gray-800 line-clamp-2 mb-1">{item.title}</h3>
                                         <p className="text-violet-600 font-bold mb-2">{item.price.toLocaleString('vi-VN')}đ</p>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <span>Số lượng: {item.quantity}</span>
+                                        <div className="flex items-center gap-3 mt-2">
+                                            <div className="flex items-center border border-gray-200 rounded-lg">
+                                                <button
+                                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                    className="p-1 hover:bg-gray-100 disabled:opacity-50"
+                                                    disabled={item.quantity <= 1}
+                                                >
+                                                    <Minus size={14} />
+                                                </button>
+                                                <span className="px-2 text-sm font-bold min-w-[30px] text-center">{item.quantity}</span>
+                                                <button
+                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                    className="p-1 hover:bg-gray-100"
+                                                >
+                                                    <Plus size={14} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <Button
@@ -63,12 +87,24 @@ export default function CartPage() {
                             <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 sticky top-24">
                                 <h3 className="font-bold text-gray-800 text-lg mb-6">Tổng đơn hàng</h3>
                                 <div className="flex justify-between items-center mb-4">
-                                    <span className="text-gray-600">Tam tính</span>
+                                    <span className="text-gray-600">Tạm tính</span>
                                     <span className="font-bold text-gray-900">{totalPrice.toLocaleString('vi-VN')}đ</span>
                                 </div>
                                 <div className="flex justify-between items-center mb-8">
                                     <span className="text-gray-600">Phí vận chuyển</span>
                                     <span className="text-green-600 font-bold">Miễn phí</span>
+                                </div>
+                                <div className="mb-6">
+                                    <label className="text-sm font-bold text-gray-700 block mb-2">Đơn vị vận chuyển</label>
+                                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-200 cursor-pointer">
+                                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                            <Truck size={20} />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-gray-900 text-sm">Green2Xpress</div>
+                                            <div className="text-xs text-green-600">Nhanh & Tiết kiệm</div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="border-t border-gray-100 pt-6 mb-6">
                                     <div className="flex justify-between items-center">
@@ -79,8 +115,11 @@ export default function CartPage() {
                                     </div>
                                 </div>
 
-                                <Button className="w-full h-14 rounded-xl text-lg shadow-xl shadow-violet-500/20 mb-3" onClick={() => alert('Chức năng thanh toán chưa được tích hợp trong MVP')}>
-                                    Thanh toán ngay <ArrowRight size={20} className="ml-2" />
+                                <Button
+                                    className="w-full h-14 rounded-xl text-lg shadow-xl shadow-teal-500/20 mb-3 bg-teal-600 hover:bg-teal-700 border-none text-white"
+                                    onClick={handlePlaceOrder}
+                                >
+                                    Đặt hàng ngay <ArrowRight size={20} className="ml-2" />
                                 </Button>
                                 <Link to="/market">
                                     <Button variant="ghost" className="w-full h-12 rounded-xl text-gray-500">

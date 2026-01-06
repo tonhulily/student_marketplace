@@ -2,7 +2,7 @@
 import { useParams, Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { PRODUCTS } from '../mock/data';
-import { ArrowLeft, MapPin, ShieldCheck, Repeat, MessageCircle, Heart, Share2, School, ShoppingCart, AlertCircle } from 'lucide-react';
+import { ArrowLeft, MapPin, ShieldCheck, MessageCircle, Heart, Share2, School, ShoppingCart, AlertCircle } from 'lucide-react';
 import Header from '../components/Header';
 import { useCart } from '../contexts/CartContext';
 import VerifiedBadge from '../components/VerifiedBadge';
@@ -22,7 +22,7 @@ export default function ProductDetailPage() {
          <div className="max-w-6xl mx-auto px-4">
 
             {/* Breadcrumb / Back */}
-            <Link to="/market" className="inline-flex items-center text-gray-500 hover:text-violet-600 font-bold mb-6 transition-colors">
+            <Link to="/market" className="inline-flex items-center text-gray-500 hover:text-teal-600 font-bold mb-6 transition-colors">
                <ArrowLeft size={20} className="mr-2" /> Quay lại chợ
             </Link>
 
@@ -36,7 +36,7 @@ export default function ProductDetailPage() {
                   {/* Gallery Mockup */}
                   <div className="grid grid-cols-4 gap-4">
                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="aspect-square rounded-2xl bg-white border border-gray-200 overflow-hidden cursor-pointer hover:border-violet-500 transition-colors">
+                        <div key={i} className="aspect-square rounded-2xl bg-white border border-gray-200 overflow-hidden cursor-pointer hover:border-teal-500 transition-colors">
                            <img src={product.image} className="w-full h-full object-cover opacity-70 hover:opacity-100" />
                         </div>
                      ))}
@@ -96,12 +96,12 @@ export default function ProductDetailPage() {
                            <div className="grid grid-cols-2 gap-3">
                               <Button
                                  onClick={() => addToCart(product)}
-                                 className="w-full rounded-2xl h-14 text-lg shadow-xl shadow-violet-500/20 bg-white text-violet-600 border border-violet-100 hover:bg-violet-50"
+                                 className="w-full rounded-2xl h-14 text-lg shadow-xl shadow-teal-500/20 bg-white text-teal-600 border border-teal-100 hover:bg-teal-50"
                               >
                                  <ShoppingCart className="mr-2" /> Thêm giỏ hàng
                               </Button>
                               <Link to={`/chat/${product.seller.id}`} className="w-full">
-                                 <Button className="w-full rounded-2xl h-14 text-lg shadow-xl shadow-violet-500/20">
+                                 <Button className="w-full rounded-2xl h-14 text-lg shadow-xl shadow-teal-500/20">
                                     <MessageCircle className="mr-2" /> Chat ngay
                                  </Button>
                               </Link>
@@ -112,9 +112,7 @@ export default function ProductDetailPage() {
                            </Button>
                         )}
 
-                        <Button variant="outline" className="w-full rounded-2xl h-14 text-lg border-2">
-                           <Repeat className="mr-2" /> Đề xuất đổi đồ
-                        </Button>
+
                      </div>
                   </div>
 

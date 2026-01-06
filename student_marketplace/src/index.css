@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #0d9488; /* Teal 600 */
+  --primary-light: #2dd4bf; /* Teal 400 */
+  --secondary: #10b981; /* Emerald 500 */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -15,4 +21,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Global Overrides for rebranding */
+.text-violet-600 { color: var(--primary) !important; }
+.bg-violet-600 { background-color: var(--primary) !important; }
+.bg-violet-50 { background-color: #f0fdf4 !important; } /* Green 50 */
+.border-violet-100 { border-color: #ccfbf1 !important; } /* Teal 100 */
+.from-violet-600 { --tw-gradient-from: var(--primary) !important; }
+.to-pink-500 { --tw-gradient-to: var(--secondary) !important; }
+.text-pink-500 { color: var(--secondary) !important; }
+.bg-pink-500 { background-color: var(--secondary) !important; }
+
 

@@ -14,11 +14,11 @@ export default function Header() {
 
         {/* === LOGO SECTION === */}
         <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-          <div className="bg-gradient-to-br from-violet-600 to-pink-500 w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform duration-300">
-            S
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg group-hover:scale-105 transition-transform duration-300">
+            <img src="/logo.png" alt="Green2Hand" className="w-full h-full object-cover" />
           </div>
           <span className="text-2xl font-black tracking-tight text-gray-900 hidden sm:block">
-            Student<span className="text-violet-600">Market</span>
+            Green<span className="text-teal-600">2Hand</span>
           </span>
         </Link>
 
@@ -30,7 +30,7 @@ export default function Header() {
             className="w-full h-11 pl-11 pr-4 rounded-2xl bg-white border border-gray-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 transition-all outline-none text-sm font-medium shadow-sm"
           />
           <Search
-            className="absolute left-4 top-3 text-gray-400 group-focus-within:text-violet-600 transition-colors"
+            className="absolute left-4 top-3 text-gray-400 group-focus-within:text-teal-600 transition-colors"
             size={20}
           />
         </div>
@@ -69,7 +69,7 @@ export default function Header() {
 
             {/* Cart */}
             <Link to="/cart" className="relative">
-              <Button variant="ghost" size="icon" className="rounded-full hover:bg-white hover:shadow-md hover:text-violet-600 text-gray-500 transition-all w-10 h-10">
+              <Button variant="ghost" size="icon" className="rounded-full hover:bg-white hover:shadow-md hover:text-teal-600 text-gray-500 transition-all w-10 h-10">
                 <ShoppingCart size={22} strokeWidth={2.5} />
                 {cartItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#F8F9FC]">

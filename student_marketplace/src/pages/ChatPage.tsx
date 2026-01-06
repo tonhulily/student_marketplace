@@ -74,7 +74,7 @@ export default function ChatPage() {
             <div className="w-20 md:w-80 border-r border-gray-100 flex flex-col h-full bg-white flex-shrink-0">
                <div className="p-4 hidden md:block flex-none border-b border-gray-50">
                   <div className="relative">
-                     <input type="text" placeholder="Tìm tin nhắn..." className="w-full bg-gray-100 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50" />
+                     <input type="text" placeholder="Tìm tin nhắn..." className="w-full bg-gray-100 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50" />
                      <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
                   </div>
                </div>
@@ -84,14 +84,14 @@ export default function ChatPage() {
                      <div
                         key={session.id}
                         onClick={() => setActiveSessionId(session.id)}
-                        className={`p-3 rounded-xl flex items-center gap-3 cursor-pointer transition-all mb-1 ${session.id === activeSessionId ? 'bg-violet-50' : 'hover:bg-gray-50'
+                        className={`p-3 rounded-xl flex items-center gap-3 cursor-pointer transition-all mb-1 ${session.id === activeSessionId ? 'bg-teal-50' : 'hover:bg-gray-50'
                            }`}
                      >
                         <div className="relative flex-shrink-0">
                            <img src={session.partner.avatar} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-200" alt="" />
                         </div>
                         <div className="hidden md:block flex-1 min-w-0">
-                           <h4 className={`font-bold text-sm truncate ${session.id === activeSessionId ? 'text-violet-700' : 'text-gray-900'}`}>{session.partner.name}</h4>
+                           <h4 className={`font-bold text-sm truncate ${session.id === activeSessionId ? 'text-teal-700' : 'text-gray-900'}`}>{session.partner.name}</h4>
                            <p className="text-xs text-gray-500 truncate">{session.lastMessage}</p>
                         </div>
                      </div>
@@ -118,7 +118,7 @@ export default function ChatPage() {
                      const isMe = msg.senderId === 'me';
                      return (
                         <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                           <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${isMe ? 'bg-gradient-to-br from-violet-600 to-pink-500 text-white' : 'bg-white text-gray-800 border border-gray-100'
+                           <div className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${isMe ? 'bg-gradient-to-br from-teal-600 to-green-500 text-white' : 'bg-white text-gray-800 border border-gray-100'
                               }`}>
                               {msg.text}
                            </div>
@@ -137,7 +137,7 @@ export default function ChatPage() {
                            value={inputValue}
                            onChange={(e) => setInputValue(e.target.value)}
                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                           className="w-full bg-gray-100 rounded-full pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                           className="w-full bg-gray-100 rounded-full pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                         />
                         <Smile size={18} className="absolute right-3 top-2.5 text-gray-400" />
                      </div>

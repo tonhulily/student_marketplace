@@ -15,11 +15,11 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#F8F9FC] text-gray-800 pb-20 overflow-x-hidden">
       <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="bg-gradient-to-br from-violet-600 to-pink-500 w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-            S
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg">
+            <img src="/logo.png" alt="Green2Hand" className="w-full h-full object-cover" />
           </div>
           <span className="text-2xl font-black tracking-tight text-gray-900">
-            Student<span className="text-violet-600">Market</span>
+            Green<span className="text-teal-600">2Hand</span>
           </span>
         </div>
 
@@ -27,9 +27,7 @@ export default function HomePage() {
           <a href="#" className="hover:text-violet-600 transition-colors">
             Khám phá
           </a>
-          <a href="#" className="hover:text-violet-600 transition-colors">
-            Đổi đồ (Barter)
-          </a>
+
           <a href="#" className="hover:text-violet-600 transition-colors">
             Cộng đồng
           </a>
@@ -61,36 +59,32 @@ export default function HomePage() {
 
         <h1 className="text-5xl md:text-7xl font-black leading-[1.1] mb-6 text-gray-900 tracking-tight">
           Chợ đồ cũ <br />
-          <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-teal-600 via-emerald-500 to-green-500 bg-clip-text text-transparent">
             Sắc màu & An toàn.
           </span>
         </h1>
 
         <p className="text-lg md:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
           Không chỉ là mua bán. Chúng tôi mang đến tính năng{" "}
-          <strong className="text-gray-800">Đổi đồ (Barter)</strong>,{" "}
           <strong className="text-gray-800">Chat trực tiếp</strong> và bắt buộc{" "}
           <strong className="text-gray-800">Xác thực sinh viên</strong> để bảo vệ túi tiền của bạn.
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link to="/market">
-            <Button size="lg" className="shadow-violet-500/30">
+            <Button size="lg" className="shadow-teal-500/30 bg-teal-600 hover:bg-teal-700">
               <Search className="w-5 h-5 mr-2" /> Tìm đồ ngay
             </Button>
           </Link>
-          <Button variant="outline" size="lg" className="bg-white">
-            <Repeat className="w-5 h-5 mr-2" /> Tôi muốn đổi đồ
-          </Button>
         </div>
       </header>
 
       <section className="max-w-6xl mx-auto px-4 mt-24">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          
+
           <div className="md:col-span-4 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-300">
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-green-100 rounded-full blur-3xl opacity-50"></div>
-            
+
             <div className="relative z-10">
               <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-6 group-hover:scale-110 transition-transform">
                 <ShieldCheck size={28} strokeWidth={2.5} />
@@ -100,7 +94,7 @@ export default function HomePage() {
                 Yêu cầu bắt buộc email <span className="font-mono bg-green-100 px-1 rounded text-green-700">.edu.vn</span>.
                 Biết rõ người bán học trường nào, uy tín ra sao.
               </p>
-              
+
               <div className="bg-gray-50 p-3 rounded-2xl border border-gray-100 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
                 <div>
@@ -113,84 +107,55 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="md:col-span-8 bg-gradient-to-br from-violet-600 to-indigo-700 p-8 md:p-10 rounded-[2.5rem] text-white relative overflow-hidden group shadow-xl shadow-indigo-500/20">
-            <div className="absolute right-[-20px] bottom-[-40px] opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-500">
-              <Repeat size={240} />
-            </div>
-            
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full">
-              <div className="md:w-1/2">
-                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-bold mb-4 border border-white/20">
-                  <Repeat size={14} /> TÍNH NĂNG MỚI
-                </div>
-                <h3 className="text-3xl font-bold mb-4">Hệ thống "Đổi Đồ"</h3>
-                <p className="text-indigo-100 mb-6 text-sm md:text-base">
-                  Hết tiền cuối tháng? Đừng lo. <br/>
-                  Tạo yêu cầu đổi món đồ cũ của bạn lấy món đồ bạn cần. Hệ thống tự động đề xuất các món đồ có giá trị tương đương.
-                </p>
-                <Button variant="secondary" className="rounded-xl h-10 text-sm">
-                  Thử đổi đồ ngay
-                </Button>
-              </div>
-              <div className="md:w-1/2 mt-6 md:mt-0 flex items-center justify-center gap-2">
-                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 w-28 h-32 flex flex-col items-center justify-center animate-bounce duration-[3000ms]">
-                   <div className="w-12 h-16 bg-gray-800 rounded-lg mb-2"></div>
-                   <span className="text-[10px] font-bold">Điện thoại cũ</span>
-                </div>
-                <Repeat className="text-white/50" />
-                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 w-28 h-32 flex flex-col items-center justify-center animate-bounce duration-[3000ms] delay-700">
-                   <div className="w-16 h-12 bg-gray-800 rounded-lg mb-2"></div>
-                   <span className="text-[10px] font-bold">Máy tính bảng</span>
-                </div>
-              </div>
-            </div>
-          </div>
+
+          {/* REMOVED EXCHANGE SECTION */}
+
 
           <div className="md:col-span-4 bg-[#FFF0F5] p-8 rounded-[2.5rem] border border-pink-100 hover:border-pink-300 transition-colors group">
-             <div className="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center text-pink-500 mb-6">
-                <ShoppingBag size={28} strokeWidth={2.5} />
-             </div>
-             <h3 className="text-2xl font-bold mb-2">Lọc giá thông minh</h3>
-             <p className="text-gray-500 text-sm mb-6">Chỉ hiển thị những món đồ phù hợp với túi tiền sinh viên.</p>
-             
-             <div className="bg-white p-4 rounded-xl shadow-sm">
-                <div className="flex justify-between text-xs font-bold text-gray-400 mb-2">
-                   <span>0đ</span>
-                   <span className="text-pink-500">500.000đ</span>
-                </div>
-                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                   <div className="h-full w-2/3 bg-pink-500 rounded-full"></div>
-                </div>
-             </div>
+            <div className="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center text-pink-500 mb-6">
+              <ShoppingBag size={28} strokeWidth={2.5} />
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Lọc giá thông minh</h3>
+            <p className="text-gray-500 text-sm mb-6">Chỉ hiển thị những món đồ phù hợp với túi tiền sinh viên.</p>
+
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+              <div className="flex justify-between text-xs font-bold text-gray-400 mb-2">
+                <span>0đ</span>
+                <span className="text-pink-500">500.000đ</span>
+              </div>
+              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full w-2/3 bg-pink-500 rounded-full"></div>
+              </div>
+            </div>
           </div>
           <div className="md:col-span-4 bg-[#F0F8FF] p-8 rounded-[2.5rem] border border-blue-100 hover:border-blue-300 transition-colors group">
             <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 mb-6">
-                <MessageCircle size={28} strokeWidth={2.5} />
-             </div>
-             <h3 className="text-2xl font-bold mb-2">Chat trực tiếp</h3>
-             <p className="text-gray-500 text-sm mb-6">Đàm phán giá cả, gửi ảnh thực tế và chốt địa điểm giao dịch ngay trên web.</p>
-             
-             <div className="flex -space-x-3">
-                {[1,2,3].map(i => (
-                    <div key={i} className={`w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center shadow-sm`}>
-                         <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} alt="avatar" className="w-full h-full rounded-full" />
-                    </div>
-                ))}
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
-                    +9
+              <MessageCircle size={28} strokeWidth={2.5} />
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Chat trực tiếp</h3>
+            <p className="text-gray-500 text-sm mb-6">Đàm phán giá cả, gửi ảnh thực tế và chốt địa điểm giao dịch ngay trên web.</p>
+
+            <div className="flex -space-x-3">
+              {[1, 2, 3].map(i => (
+                <div key={i} className={`w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center shadow-sm`}>
+                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} alt="avatar" className="w-full h-full rounded-full" />
                 </div>
-             </div>
+              ))}
+              <div className="w-10 h-10 rounded-full border-2 border-white bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                +9
+              </div>
+            </div>
           </div>
 
           <div className="md:col-span-4 bg-[#FFF8E1] p-8 rounded-[2.5rem] border border-orange-100 hover:border-orange-300 transition-colors flex flex-col justify-between">
-             <div>
-                <h3 className="text-2xl font-bold mb-2 text-orange-900">Trạng thái rõ ràng</h3>
-                <p className="text-orange-700/70 text-sm">Không còn cảnh hỏi "Còn hàng không?"</p>
-             </div>
-             <div className="mt-6 flex gap-2">
-                <span className="px-3 py-1 bg-green-500 text-white rounded-lg text-xs font-bold shadow-green-200 shadow-lg">Còn hàng</span>
-                <span className="px-3 py-1 bg-gray-300 text-gray-500 rounded-lg text-xs font-bold opacity-50">Đã bán</span>
-             </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-2 text-orange-900">Trạng thái rõ ràng</h3>
+              <p className="text-orange-700/70 text-sm">Không còn cảnh hỏi "Còn hàng không?"</p>
+            </div>
+            <div className="mt-6 flex gap-2">
+              <span className="px-3 py-1 bg-green-500 text-white rounded-lg text-xs font-bold shadow-green-200 shadow-lg">Còn hàng</span>
+              <span className="px-3 py-1 bg-gray-300 text-gray-500 rounded-lg text-xs font-bold opacity-50">Đã bán</span>
+            </div>
           </div>
 
         </div>
@@ -198,24 +163,24 @@ export default function HomePage() {
 
       <section className="mt-24 px-4">
         <div className="max-w-4xl mx-auto bg-gradient-to-br from-violet-600 via-fuchsia-600 to-pink-500 rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-violet-500/40">
-             <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-white rounded-full blur-[80px] opacity-20 mix-blend-overlay"></div>
-             <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 bg-orange-400 rounded-full blur-[60px] opacity-30"></div>
-             
-             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+          <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-white rounded-full blur-[80px] opacity-20 mix-blend-overlay"></div>
+          <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 bg-orange-400 rounded-full blur-[60px] opacity-30"></div>
 
-             <div className="relative z-10">
-                 <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
-                   Bắt đầu dọn phòng thôi!
-                 </h2>
-                 <p className="text-violet-50 mb-8 max-w-lg mx-auto text-lg font-medium">
-                     Đăng ký ngay bằng email sinh viên để tham gia cộng đồng mua bán văn minh nhất.
-                 </p>
-                 <Link to="/register">
-                    <Button size="lg" className="bg-white text-violet-700 hover:bg-violet-50 border-none rounded-2xl px-10 text-lg hover:scale-105 transition-transform shadow-xl">
-                        Tạo tài khoản ngay <ArrowRight size={20} className="ml-2"/>
-                    </Button>
-                 </Link>
-             </div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
+              Bắt đầu dọn phòng thôi!
+            </h2>
+            <p className="text-violet-50 mb-8 max-w-lg mx-auto text-lg font-medium">
+              Đăng ký ngay bằng email sinh viên để tham gia cộng đồng mua bán văn minh nhất.
+            </p>
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-violet-700 hover:bg-violet-50 border-none rounded-2xl px-10 text-lg hover:scale-105 transition-transform shadow-xl">
+                Tạo tài khoản ngay <ArrowRight size={20} className="ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>

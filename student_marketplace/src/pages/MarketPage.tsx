@@ -22,7 +22,7 @@ export default function MarketPage() {
             {/* SIDEBAR FILTER */}
             <aside className="md:col-span-3 space-y-6">
                <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 sticky top-24">
-                  <div className="flex items-center gap-2 mb-6 text-violet-700 font-bold">
+                  <div className="flex items-center gap-2 mb-6 text-teal-700 font-bold">
                      <Filter size={20} /> Bộ lọc tìm kiếm
                   </div>
 
@@ -33,7 +33,7 @@ export default function MarketPage() {
                         <div>
                            <div className="flex justify-between text-xs text-gray-500 mb-1">
                               <span>Tối thiểu</span>
-                              <span className="font-bold text-violet-600">{priceRange.min.toLocaleString('vi-VN')}đ</span>
+                              <span className="font-bold text-teal-600">{priceRange.min.toLocaleString('vi-VN')}đ</span>
                            </div>
                            <input
                               type="range"
@@ -45,13 +45,13 @@ export default function MarketPage() {
                                  const val = Number(e.target.value);
                                  if (val <= priceRange.max) setPriceRange({ ...priceRange, min: val });
                               }}
-                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
                            />
                         </div>
                         <div>
                            <div className="flex justify-between text-xs text-gray-500 mb-1">
                               <span>Tối đa</span>
-                              <span className="font-bold text-violet-600">{priceRange.max.toLocaleString('vi-VN')}đ</span>
+                              <span className="font-bold text-teal-600">{priceRange.max.toLocaleString('vi-VN')}đ</span>
                            </div>
                            <input
                               type="range"
@@ -63,7 +63,7 @@ export default function MarketPage() {
                                  const val = Number(e.target.value);
                                  if (val >= priceRange.min) setPriceRange({ ...priceRange, max: val });
                               }}
-                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
                            />
                         </div>
                      </div>
@@ -75,7 +75,7 @@ export default function MarketPage() {
                      <div className="space-y-2">
                         {['Tất cả', 'Sách/Tài liệu', 'Công nghệ', 'Nội thất', 'Thời trang'].map(cat => (
                            <label key={cat} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
-                              <input type="checkbox" className="w-5 h-5 rounded text-violet-600 focus:ring-violet-500 border-gray-300" />
+                              <input type="checkbox" className="w-5 h-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                               <span className="text-gray-600 font-medium">{cat}</span>
                            </label>
                         ))}
@@ -88,7 +88,7 @@ export default function MarketPage() {
             <main className="md:col-span-9">
                <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-800">Dành cho bạn</h2>
-                  <select className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-violet-200">
+                  <select className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-teal-200">
                      <option>Mới nhất</option>
                      <option>Giá thấp đến cao</option>
                      <option>Gần tôi nhất</option>
@@ -124,11 +124,11 @@ function ProductCard({ product }: { product: Product }) {
             </div>
             <div className="p-5 flex flex-col flex-1">
                <div className="flex justify-between items-start mb-2">
-                  <span className="text-xs font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-md mb-2 inline-block">{product.category}</span>
+                  <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-md mb-2 inline-block">{product.category}</span>
                   <span className="text-xs text-gray-400 font-medium">{product.postedAt}</span>
                </div>
                <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2 min-h-[3.5rem] leading-tight">{product.title}</h3>
-               <div className="text-xl font-black text-pink-500 mb-4">{product.price.toLocaleString('vi-VN')}đ</div>
+               <div className="text-xl font-black text-teal-600 mb-4">{product.price.toLocaleString('vi-VN')}đ</div>
                <div className="mt-auto flex items-center gap-3 pt-4 border-t border-gray-50">
                   <img src={product.seller.avatar} alt="seller" className="w-8 h-8 rounded-full border border-gray-200" />
                   <div className="flex-1 min-w-0">
