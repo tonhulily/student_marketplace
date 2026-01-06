@@ -2,9 +2,11 @@ import { Link, useLocation } from "react-router-dom";
 import Button from "../components/Button";
 import { Search, Bell, MessageCircle, PlusCircle, ShoppingCart } from "lucide-react"; // Thêm icon PlusCircle
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Header() {
   const { cartItems } = useCart();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
@@ -37,9 +39,7 @@ export default function Header() {
 
         {/* === ACTIONS === */}
         {isAuthPage ? (
-          <div className="flex gap-3">
-            <Link to="/login"><Button variant="ghost">Đăng nhập</Button></Link>
-          </div>
+          <div className="flex gap-3"></div>
         ) : (
           <div className="flex items-center gap-3 sm:gap-4">
 
@@ -84,14 +84,37 @@ export default function Header() {
               <Bell size={22} strokeWidth={2.5} />
             </Button>
 
-            {/* Avatar */}
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 p-[2px] cursor-pointer hover:scale-105 transition-transform shadow-md ml-1">
-              <img
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                className="w-full h-full rounded-full bg-white border-2 border-white object-cover"
-                alt="User"
-              />
-            </div>
+            {/* Avatar & User Info */}
+            {user ? (
+              <div className="flex items-center gap-2 group relative cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 p-[2px] shadow-md">
+                  <img
+                    src={user.avatar}
+                    className="w-full h-full rounded-full bg-white border-2 border-white object-cover"
+                    alt={user.name}
+                  />
+                </div>
+                <div className="hidden md:block text-left">
+                  <p className="text-xs font-bold text-gray-900">{user.name}</p>
+                  <p className="text-[10px] text-teal-600 font-bold">Verified</p>
+                </div>
+
+                {/* Dropdown Logout (Simple Hover) */}
+                <div className="absolute top-10 right-0 w-32 pt-2 hidden group-hover:block">
+                  <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                    <button onClick={logout} className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 font-bold">
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              !isAuthPage && (
+                <Link to="/login">
+                  <Button className="rounded-xl">Đăng nhập</Button>
+                </Link>
+              )
+            )}
           </div>
         )}
       </div>

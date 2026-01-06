@@ -8,24 +8,27 @@ import ChatPage from "./pages/ChatPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import CartPage from "./pages/CartPageFixed";
 import { CartProvider } from "./contexts/CartContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
     <Router>
-      <CartProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/market" element={<MarketPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/chat/:userId" element={<ChatPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          {/* Route Đăng bán */}
-          <Route path="/create-post" element={<CreatePostPage />} />
-        </Routes>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/market" element={<MarketPage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            {/* Route Đăng bán */}
+            <Route path="/create-post" element={<CreatePostPage />} />
+          </Routes>
+        </CartProvider>
+      </AuthProvider>
     </Router>
   );
 }

@@ -1,9 +1,24 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (login(email)) {
+      alert('Đăng nhập thành công!');
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8F9FC] p-4 relative overflow-hidden">
       {/* Background Blobs */}
@@ -26,9 +41,20 @@ export default function LoginPage() {
           <p className="text-gray-500 font-medium">Đăng nhập để săn đồ giá hời.</p>
         </div>
 
-        <form className="space-y-4">
-          <Input label="Email" placeholder="example@hust.edu.vn" />
-          <Input label="Mật khẩu" type="password" placeholder="••••••••" />
+        <form className="space-y-4" onSubmit={handleLogin}>
+          <Input
+            label="Email"
+            placeholder="example@hust.edu.vn"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            label="Mật khẩu"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <div className="flex justify-end">
             <a
