@@ -22,19 +22,19 @@ export default function CartPage() {
             <Header />
             <div className="max-w-4xl mx-auto px-4 pt-8">
                 <h1 className="text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                    <ShoppingBag className="text-violet-600" />
+                    <ShoppingBag className="text-teal-600" />
                     Giỏ hàng của bạn
                 </h1>
 
                 {cartItems.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100">
-                        <div className="inline-flex items-center justify-center w-24 h-24 bg-violet-50 rounded-full mb-6">
-                            <ShoppingBag size={40} className="text-violet-300" />
+                        <div className="inline-flex items-center justify-center w-24 h-24 bg-teal-50 rounded-full mb-6">
+                            <ShoppingBag size={40} className="text-teal-300" />
                         </div>
                         <h2 className="text-xl font-bold text-gray-800 mb-2">Giỏ hàng trống</h2>
                         <p className="text-gray-500 mb-8">Bạn chưa thêm sản phẩm nào vào giỏ hàng.</p>
                         <Link to="/market">
-                            <Button className="rounded-xl px-8 h-12 shadow-lg shadow-violet-500/20">
+                            <Button className="rounded-xl px-8 h-12 shadow-lg shadow-teal-500/20">
                                 Dạo chợ ngay
                             </Button>
                         </Link>
@@ -50,7 +50,7 @@ export default function CartPage() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <h3 className="font-bold text-gray-800 line-clamp-2 mb-1">{item.title}</h3>
-                                        <p className="text-violet-600 font-bold mb-2">{item.price.toLocaleString('vi-VN')}đ</p>
+                                        <p className="text-teal-600 font-bold mb-2">{item.price.toLocaleString('vi-VN')}đ</p>
                                         <div className="flex items-center gap-3 mt-2">
                                             <div className="flex items-center border border-gray-200 rounded-lg">
                                                 <button
@@ -109,7 +109,7 @@ export default function CartPage() {
                                 <div className="border-t border-gray-100 pt-6 mb-6">
                                     <div className="flex justify-between items-center">
                                         <span className="text-lg font-bold text-gray-800">Tổng cộng</span>
-                                        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-500">
+                                        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">
                                             {totalPrice.toLocaleString('vi-VN')}đ
                                         </span>
                                     </div>

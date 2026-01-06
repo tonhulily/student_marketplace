@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
                   <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
 
                      <div className="flex justify-between items-start mb-4">
-                        <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-xl text-sm font-bold">
+                        <span className="bg-teal-100 text-teal-700 px-3 py-1 rounded-xl text-sm font-bold">
                            {product.category}
                         </span>
                         <div className="flex gap-2">
@@ -57,7 +57,7 @@ export default function ProductDetailPage() {
                                  <AlertCircle size={16} /> Đã bán
                               </span>
                            )}
-                           <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50 hover:text-pink-500">
+                           <Button variant="ghost" size="icon" className="rounded-full hover:bg-emerald-50 hover:text-emerald-500">
                               <Heart size={20} />
                            </Button>
                            <Button variant="ghost" size="icon" className="rounded-full">
@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
                         {product.title}
                      </h1>
 
-                     <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-500 mb-6">
+                     <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600 mb-6">
                         {product.price.toLocaleString('vi-VN')}đ
                      </div>
 
@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
                            <span className="text-xs text-gray-400 ml-1">({product.seller.rating})</span>
                         </div>
                      </div>
-                     <Button variant="ghost" className="ml-auto text-violet-600 font-bold">
+                     <Button variant="ghost" className="ml-auto text-teal-600 font-bold">
                         Xem trang
                      </Button>
                   </div>

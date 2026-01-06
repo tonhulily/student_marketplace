@@ -4,10 +4,14 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { Upload, X, Repeat, DollarSign, Image as ImageIcon, Sparkles } from "lucide-react";
+import { PRODUCTS } from "../mock/data";
 
 export default function CreatePostPage() {
    const navigate = useNavigate();
    const [images, setImages] = useState<string[]>([]);
+
+   // Extract unique categories from mock data
+   const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
 
    const handlePost = () => {
       // Validate inputs if needed (skipping for MVP)
@@ -32,7 +36,7 @@ export default function CreatePostPage() {
 
          <main className="max-w-4xl mx-auto px-4 mt-8">
             <div className="flex items-center gap-3 mb-8">
-               <div className="w-12 h-12 bg-violet-100 rounded-2xl flex items-center justify-center text-violet-600 shadow-sm">
+               <div className="w-12 h-12 bg-teal-100 rounded-2xl flex items-center justify-center text-teal-600 shadow-sm">
                   <Sparkles size={24} />
                </div>
                <div>
@@ -45,11 +49,11 @@ export default function CreatePostPage() {
                <div className="md:col-span-8 space-y-6">
                   <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
                      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                        <ImageIcon size={20} className="text-violet-500" /> Hình ảnh sản phẩm
+                        <ImageIcon size={20} className="text-teal-500" /> Hình ảnh sản phẩm
                      </h3>
 
                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                        <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 hover:border-violet-500 hover:bg-violet-50 transition-all cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-violet-600">
+                        <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 hover:border-teal-500 hover:bg-teal-50 transition-all cursor-pointer flex flex-col items-center justify-center text-gray-400 hover:text-teal-600">
                            <Upload size={24} className="mb-2" />
                            <span className="text-xs font-bold">Thêm ảnh</span>
                            <input type="file" hidden onChange={handleImageUpload} />
@@ -78,17 +82,17 @@ export default function CreatePostPage() {
                      <div className="grid grid-cols-2 gap-4">
                         <div>
                            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Danh mục</label>
-                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-violet-500 focus:outline-none transition-colors cursor-pointer">
-                              <option>Sách/Giáo trình</option>
-                              <option>Đồ công nghệ</option>
-                              <option>Nội thất/Gia dụng</option>
-                              <option>Thời trang</option>
-                              <option>Khác</option>
+                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer capitalize">
+                              <option value="">Chọn danh mục</option>
+                              {categories.map((cat) => (
+                                 <option key={cat} value={cat}>{cat}</option>
+                              ))}
+                              <option value="other">Khác</option>
                            </select>
                         </div>
                         <div>
                            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Tình trạng</label>
-                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-violet-500 focus:outline-none transition-colors cursor-pointer">
+                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer">
                               <option>Mới 100%</option>
                               <option>Như mới (99%)</option>
                               <option>Cũ (80-90%)</option>
@@ -102,7 +106,7 @@ export default function CreatePostPage() {
                         <textarea
                            rows={5}
                            placeholder="Mô tả chi tiết về sản phẩm, lý do pass, địa chỉ giao dịch..."
-                           className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 p-4 text-sm focus:border-violet-500 focus:outline-none transition-colors resize-none"
+                           className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 p-4 text-sm focus:border-teal-500 focus:outline-none transition-colors resize-none"
                         ></textarea>
                      </div>
                   </div>
@@ -139,7 +143,7 @@ export default function CreatePostPage() {
                      <div className="space-y-3">
                         <Button
                            onClick={handlePost}
-                           className="w-full rounded-xl h-12 shadow-lg shadow-violet-500/20 text-lg"
+                           className="w-full rounded-xl h-12 shadow-lg shadow-teal-500/20 text-lg"
                         >
                            Đăng bán ngay
                         </Button>

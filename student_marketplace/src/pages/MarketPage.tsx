@@ -8,8 +8,35 @@ import VerifiedBadge from '../components/VerifiedBadge';
 
 export default function MarketPage() {
    const [priceRange, setPriceRange] = useState<{ min: number, max: number }>({ min: 0, max: 5000000 });
+   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-   const filteredProducts = PRODUCTS.filter(p => p.price >= priceRange.min && p.price <= priceRange.max);
+   // Extract unique categories from data for the filter
+   const categories = ['Tất cả', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+
+   const handleCategoryChange = (category: string) => {
+      setSelectedCategories(prev => {
+         if (category === 'Tất cả') {
+            return prev.includes('Tất cả') ? [] : ['Tất cả']; // Toggle All
+         }
+         // If "All" was selected, deselect it when clicking specific
+         const newPrev = prev.filter(c => c !== 'Tất cả');
+
+         if (newPrev.includes(category)) {
+            return newPrev.filter(c => c !== category);
+         } else {
+            return [...newPrev, category];
+         }
+      });
+   };
+
+   const filteredProducts = PRODUCTS.filter(p => {
+      const matchPrice = p.price >= priceRange.min && p.price <= priceRange.max;
+
+      const isAllSelected = selectedCategories.includes('Tất cả') || selectedCategories.length === 0;
+      const matchCategory = isAllSelected || selectedCategories.includes(p.category);
+
+      return matchPrice && matchCategory;
+   });
 
    return (
       <div className="min-h-screen bg-[#F8F9FC] flex flex-col">
@@ -73,12 +100,19 @@ export default function MarketPage() {
                   <div>
                      <label className="block text-sm font-bold text-gray-700 mb-3">Danh mục</label>
                      <div className="space-y-2">
-                        {['Tất cả', 'Sách/Tài liệu', 'Công nghệ', 'Nội thất', 'Thời trang'].map(cat => (
-                           <label key={cat} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
-                              <input type="checkbox" className="w-5 h-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
-                              <span className="text-gray-600 font-medium">{cat}</span>
-                           </label>
-                        ))}
+                        <div className="space-y-2">
+                           {categories.map(cat => (
+                              <label key={cat} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
+                                 <input
+                                    type="checkbox"
+                                    checked={selectedCategories.includes(cat)}
+                                    onChange={() => handleCategoryChange(cat)}
+                                    className="w-5 h-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300"
+                                 />
+                                 <span className="text-gray-600 font-medium">{cat}</span>
+                              </label>
+                           ))}
+                        </div>
                      </div>
                   </div>
                </div>

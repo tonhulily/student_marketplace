@@ -24,11 +24,11 @@ export default function HomePage() {
         </div>
 
         <div className="hidden md:flex gap-8 font-semibold text-gray-500 text-sm">
-          <a href="#" className="hover:text-violet-600 transition-colors">
+          <a href="#" className="hover:text-teal-600 transition-colors">
             Khám phá
           </a>
 
-          <a href="#" className="hover:text-violet-600 transition-colors">
+          <a href="#" className="hover:text-teal-600 transition-colors">
             Cộng đồng
           </a>
         </div>
@@ -50,9 +50,9 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <header className="max-w-5xl mx-auto text-center mt-12 px-4 relative">
         <div className="absolute top-0 left-10 w-20 h-20 bg-yellow-300 rounded-full blur-2xl opacity-40 animate-pulse"></div>
-        <div className="absolute bottom-0 right-10 w-32 h-32 bg-pink-300 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute bottom-0 right-10 w-32 h-32 bg-emerald-300 rounded-full blur-3xl opacity-40"></div>
 
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-violet-100 shadow-sm text-violet-700 font-bold text-xs mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-teal-100 shadow-sm text-teal-700 font-bold text-xs mb-8">
           <Sparkles size={14} className="text-yellow-500" />
           <span>Nền tảng dành riêng cho sinh viên Việt Nam</span>
         </div>
@@ -111,8 +111,8 @@ export default function HomePage() {
           {/* REMOVED EXCHANGE SECTION */}
 
 
-          <div className="md:col-span-4 bg-[#FFF0F5] p-8 rounded-[2.5rem] border border-pink-100 hover:border-pink-300 transition-colors group">
-            <div className="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center text-pink-500 mb-6">
+          <div className="md:col-span-4 bg-[#F0FDF4] p-8 rounded-[2.5rem] border border-green-100 hover:border-green-300 transition-colors group">
+            <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-500 mb-6">
               <ShoppingBag size={28} strokeWidth={2.5} />
             </div>
             <h3 className="text-2xl font-bold mb-2">Lọc giá thông minh</h3>
@@ -121,10 +121,10 @@ export default function HomePage() {
             <div className="bg-white p-4 rounded-xl shadow-sm">
               <div className="flex justify-between text-xs font-bold text-gray-400 mb-2">
                 <span>0đ</span>
-                <span className="text-pink-500">500.000đ</span>
+                <span className="text-green-500">500.000đ</span>
               </div>
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full w-2/3 bg-pink-500 rounded-full"></div>
+                <div className="h-full w-2/3 bg-green-500 rounded-full"></div>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function HomePage() {
       </section>
 
       <section className="mt-24 px-4">
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-violet-600 via-fuchsia-600 to-pink-500 rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-violet-500/40">
+        <div className="max-w-4xl mx-auto bg-gradient-to-br from-teal-600 via-emerald-600 to-green-500 rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-teal-500/40">
           <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-white rounded-full blur-[80px] opacity-20 mix-blend-overlay"></div>
           <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 bg-orange-400 rounded-full blur-[60px] opacity-30"></div>
 
@@ -172,11 +172,11 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
               Bắt đầu dọn phòng thôi!
             </h2>
-            <p className="text-violet-50 mb-8 max-w-lg mx-auto text-lg font-medium">
+            <p className="text-teal-50 mb-8 max-w-lg mx-auto text-lg font-medium">
               Đăng ký ngay bằng email sinh viên để tham gia cộng đồng mua bán văn minh nhất.
             </p>
             <Link to="/register">
-              <Button size="lg" className="bg-white text-violet-700 hover:bg-violet-50 border-none rounded-2xl px-10 text-lg hover:scale-105 transition-transform shadow-xl">
+              <Button size="lg" className="bg-white text-teal-700 hover:bg-teal-50 border-none rounded-2xl px-10 text-lg hover:scale-105 transition-transform shadow-xl">
                 Tạo tài khoản ngay <ArrowRight size={20} className="ml-2" />
               </Button>
             </Link>

@@ -29,7 +29,7 @@ export default function Header() {
           <input
             type="text"
             placeholder="Tìm kiếm giáo trình, đồ điện tử..."
-            className="w-full h-11 pl-11 pr-4 rounded-2xl bg-white border border-gray-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 transition-all outline-none text-sm font-medium shadow-sm"
+            className="w-full h-11 pl-11 pr-4 rounded-2xl bg-white border border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all outline-none text-sm font-medium shadow-sm"
           />
           <Search
             className="absolute left-4 top-3 text-gray-400 group-focus-within:text-teal-600 transition-colors"
@@ -45,14 +45,14 @@ export default function Header() {
 
             {/* === NÚT ĐĂNG TIN MỚI (NỔI BẬT) === */}
             <Link to="/create-post">
-              <Button className="rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 text-white shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hidden sm:flex gap-2 px-5">
+              <Button className="rounded-xl bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 hidden sm:flex gap-2 px-5">
                 <PlusCircle size={18} /> Đăng tin
               </Button>
             </Link>
 
             {/* Nút Dạo chợ (Chỉ hiện icon trên mobile nếu cần, hoặc ẩn) */}
             <Link to="/market" className="hidden lg:block">
-              <Button variant="ghost" className="font-bold text-gray-600 hover:text-violet-600 hover:bg-violet-50 rounded-xl">
+              <Button variant="ghost" className="font-bold text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-xl">
                 Dạo chợ
               </Button>
             </Link>
@@ -61,9 +61,9 @@ export default function Header() {
 
             {/* Chat */}
             <Link to="/chat">
-              <Button variant="ghost" size="icon" className="rounded-full relative hover:bg-white hover:shadow-md hover:text-violet-600 text-gray-500 transition-all w-10 h-10">
+              <Button variant="ghost" size="icon" className="rounded-full relative hover:bg-white hover:shadow-md hover:text-teal-600 text-gray-500 transition-all w-10 h-10">
                 <MessageCircle size={22} strokeWidth={2.5} />
-                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-pink-500 rounded-full border-2 border-[#F8F9FC]"></span>
+                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#F8F9FC]"></span>
               </Button>
             </Link>
 
@@ -80,14 +80,14 @@ export default function Header() {
             </Link>
 
             {/* Noti */}
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-white hover:shadow-md hover:text-violet-600 text-gray-500 transition-all w-10 h-10">
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-white hover:shadow-md hover:text-teal-600 text-gray-500 transition-all w-10 h-10">
               <Bell size={22} strokeWidth={2.5} />
             </Button>
 
             {/* Avatar & User Info */}
             {user ? (
               <div className="flex items-center gap-2 group relative cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 p-[2px] shadow-md">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 p-[2px] shadow-md">
                   <img
                     src={user.avatar}
                     className="w-full h-full rounded-full bg-white border-2 border-white object-cover"

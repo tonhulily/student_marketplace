@@ -22,8 +22,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8F9FC] p-4 relative overflow-hidden">
       {/* Background Blobs */}
-      <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-violet-300 rounded-full blur-[120px] opacity-40 mix-blend-multiply animate-pulse"></div>
-      <div className="absolute bottom-[10%] right-[20%] w-[500px] h-[500px] bg-pink-300 rounded-full blur-[120px] opacity-40 mix-blend-multiply"></div>
+      <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-teal-300 rounded-full blur-[120px] opacity-40 mix-blend-multiply animate-pulse"></div>
+      <div className="absolute bottom-[10%] right-[20%] w-[500px] h-[500px] bg-emerald-300 rounded-full blur-[120px] opacity-40 mix-blend-multiply"></div>
 
       {/* Glass Card */}
       <div className="bg-white/70 backdrop-blur-xl border border-white/50 p-8 md:p-12 rounded-[2.5rem] shadow-2xl w-full max-w-md relative z-10">
@@ -59,13 +59,13 @@ export default function LoginPage() {
           <div className="flex justify-end">
             <a
               href="#"
-              className="text-sm font-bold text-violet-600 hover:text-violet-700 hover:underline"
+              className="text-sm font-bold text-teal-600 hover:text-teal-700 hover:underline"
             >
               Quên mật khẩu?
             </a>
           </div>
 
-          <Button className="w-full rounded-2xl text-lg h-14 mt-4 shadow-lg shadow-violet-500/30">
+          <Button className="w-full rounded-2xl text-lg h-14 mt-4 shadow-lg shadow-teal-500/30">
             Đăng nhập
           </Button>
         </form>
@@ -74,7 +74,7 @@ export default function LoginPage() {
           Chưa có tài khoản?{" "}
           <Link
             to="/register"
-            className="font-bold text-violet-600 hover:underline text-base"
+            className="font-bold text-teal-600 hover:underline text-base"
           >
             Đăng ký ngay
           </Link>
