@@ -10,9 +10,9 @@ export default function CartPage() {
     const navigate = useNavigate();
 
     const handlePlaceOrder = () => {
-        if (confirm('Xác nhận đặt hàng? Đơn hàng sẽ được gửi đến Green2Xpress.')) {
+        if (window.confirm('Xác nhận đặt hàng? Đơn hàng sẽ được gửi đến Green2Xpress.')) {
             clearCart();
-            alert('Đặt hàng thành công! Cảm ơn bạn đã sử dụng Green2Hand.');
+            window.alert('Đặt hàng thành công! Cảm ơn bạn đã sử dụng Green2Hand.');
             navigate('/market');
         }
     };
