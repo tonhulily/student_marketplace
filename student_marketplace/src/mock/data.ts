@@ -18,6 +18,7 @@ export interface Product {
   description: string;
   seller: User;
   postedAt: string;
+  timestamp: number; // Added for sorting
 }
 
 export interface Message {
@@ -75,6 +76,7 @@ export const PRODUCTS: Product[] = [
     description: 'Sách mình dùng kỳ trước, có highlight vài chỗ quan trọng. Pass lại giá rẻ cho các bạn K69.',
     seller: CURRENT_USER, 
     postedAt: '2 giờ trước',
+    timestamp: Date.now() - 2 * 60 * 60 * 1000, 
   },
   {
     id: 'p2',
@@ -87,6 +89,7 @@ export const PRODUCTS: Product[] = [
     description: 'Máy mới mua nhưng được tặng máy khác nên pass lại. Còn bảo hành 1 năm.',
     seller: MOCK_USERS[0],
     postedAt: '1 ngày trước',
+    timestamp: Date.now() - 24 * 60 * 60 * 1000,
   },
   {
     id: 'p3',
@@ -99,6 +102,7 @@ export const PRODUCTS: Product[] = [
     description: 'Chuyển trọ nên cần pass gấp. Bàn hơi xước ở góc nhưng vẫn dùng tốt.',
     seller: MOCK_USERS[1],
     postedAt: '3 ngày trước',
+    timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000,
   },
   {
     id: 'p4',
@@ -111,6 +115,7 @@ export const PRODUCTS: Product[] = [
     description: 'Pin trâu nghe được 2 ngày. Bass ấm.',
     seller: MOCK_USERS[0],
     postedAt: '5 giờ trước',
+    timestamp: Date.now() - 5 * 60 * 60 * 1000,
   },
 ];
 

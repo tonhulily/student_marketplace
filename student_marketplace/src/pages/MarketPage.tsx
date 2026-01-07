@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header'; // Import Header
 import { Filter, ShieldCheck } from 'lucide-react';
-import { PRODUCTS, Product } from '../mock/data';
+import { PRODUCTS, Product, CURRENT_USER } from '../mock/data'; // Import CURRENT_USER
 
 import VerifiedBadge from '../components/VerifiedBadge';
 
 export default function MarketPage() {
    const [priceRange, setPriceRange] = useState<{ min: number, max: number }>({ min: 0, max: 5000000 });
    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+   const [sortOption, setSortOption] = useState<string>('newest');
 
    // Extract unique categories from data for the filter
    const categories = ['Tất cả', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
@@ -36,6 +37,24 @@ export default function MarketPage() {
       const matchCategory = isAllSelected || selectedCategories.includes(p.category);
 
       return matchPrice && matchCategory;
+   });
+
+   // Sorting Logic
+   const sortedProducts = [...filteredProducts].sort((a, b) => {
+      if (sortOption === 'newest') {
+         return b.timestamp - a.timestamp;
+      } else if (sortOption === 'price_asc') {
+         return a.price - b.price;
+      } else if (sortOption === 'nearest') {
+         // Prioritize sellers from the current user's school (or specifically Bách Khoa as requested)
+         const isNearA = a.seller.school.includes('Bách Khoa') || a.seller.school === CURRENT_USER.school;
+         const isNearB = b.seller.school.includes('Bách Khoa') || b.seller.school === CURRENT_USER.school;
+
+         if (isNearA && !isNearB) return -1;
+         if (!isNearA && isNearB) return 1;
+         return 0;
+      }
+      return 0;
    });
 
    return (
@@ -122,15 +141,19 @@ export default function MarketPage() {
             <main className="md:col-span-9">
                <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-800">Dành cho bạn</h2>
-                  <select className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-teal-200">
-                     <option>Mới nhất</option>
-                     <option>Giá thấp đến cao</option>
-                     <option>Gần tôi nhất</option>
+                  <select
+                     value={sortOption}
+                     onChange={(e) => setSortOption(e.target.value)}
+                     className="bg-white border-none rounded-xl px-4 py-2 text-sm font-bold text-gray-600 shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-teal-200"
+                  >
+                     <option value="newest">Mới nhất</option>
+                     <option value="price_asc">Giá thấp đến cao</option>
+                     <option value="nearest">Gần tôi nhất</option>
                   </select>
                </div>
 
                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map(product => (
+                  {sortedProducts.map(product => (
                      <ProductCard key={product.id} product={product} />
                   ))}
                </div>
