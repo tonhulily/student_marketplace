@@ -4,6 +4,8 @@ import { Search, Bell, MessageCircle, PlusCircle, ShoppingCart } from "lucide-re
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 
+import logoImg from '../assets/logo.png';
+
 export default function Header() {
   const { cartItems } = useCart();
   const { user, logout } = useAuth();
@@ -12,16 +14,13 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#F8F9FC]/80 backdrop-blur-xl border-b border-gray-200/50 supports-[backdrop-filter]:bg-[#F8F9FC]/60">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
 
         {/* === LOGO SECTION === */}
         <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg group-hover:scale-105 transition-transform duration-300">
-            <img src="/logo.png" alt="Green2Hand" className="w-full h-full object-cover" />
+          <div className="h-16 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <img src={logoImg} alt="Green2Hand" className="h-full w-auto object-contain" />
           </div>
-          <span className="text-2xl font-black tracking-tight text-gray-900 hidden sm:block">
-            Green<span className="text-teal-600">2Hand</span>
-          </span>
         </Link>
 
         {/* === SEARCH BAR === */}

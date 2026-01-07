@@ -10,13 +10,15 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import logoImg from '../assets/logo.png';
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F8F9FC] text-gray-800 pb-20 overflow-x-hidden">
       <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg">
-            <img src="/logo.png" alt="Green2Hand" className="w-full h-full object-cover" />
+          <div className="h-16 flex items-center justify-center overflow-hidden transition-transform duration-300 hover:scale-105">
+            <img src={logoImg} alt="Green2Hand" className="h-full w-auto object-contain" />
           </div>
           <span className="text-2xl font-black tracking-tight text-gray-900">
             Green<span className="text-teal-600">2Hand</span>
@@ -60,7 +62,7 @@ export default function HomePage() {
         <h1 className="text-5xl md:text-7xl font-black leading-[1.1] mb-6 text-gray-900 tracking-tight">
           Chợ đồ cũ <br />
           <span className="bg-gradient-to-r from-teal-600 via-emerald-500 to-green-500 bg-clip-text text-transparent">
-            Sắc màu & An toàn.
+            Sắc màu & An toàn
           </span>
         </h1>
 
