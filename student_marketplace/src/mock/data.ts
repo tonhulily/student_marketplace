@@ -1,10 +1,13 @@
+import calculusImg from '../assets/calculus_ii.jpg';
+import casioImg from '../assets/casio_580vnx.png';
+
 export interface User {
   id: string;
   name: string;
   avatar: string;
   school: string;
   isVerified: boolean;
-  rating: number; 
+  rating: number;
 }
 
 export interface Product {
@@ -69,20 +72,20 @@ export const PRODUCTS: Product[] = [
     id: 'p1',
     title: 'Giáo trình Giải tích 1 & 2 (Bách Khoa)',
     price: 50000,
-    image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800',
+    image: calculusImg,
     category: 'Sách/Tài liệu',
     status: 'available',
     condition: 'Cũ (80-90%)',
     description: 'Sách mình dùng kỳ trước, có highlight vài chỗ quan trọng. Pass lại giá rẻ cho các bạn K69.',
-    seller: CURRENT_USER, 
+    seller: CURRENT_USER,
     postedAt: '2 giờ trước',
-    timestamp: Date.now() - 2 * 60 * 60 * 1000, 
+    timestamp: Date.now() - 2 * 60 * 60 * 1000,
   },
   {
     id: 'p2',
     title: 'Máy tính Casio FX 580VN X',
     price: 350000,
-    image: 'https://images.unsplash.com/photo-1587145820266-a5951ee1f620?auto=format&fit=crop&q=80&w=800',
+    image: casioImg,
     category: 'Đồ dùng học tập',
     status: 'available',
     condition: 'Như mới (99%)',
@@ -123,7 +126,7 @@ export const CHAT_SESSIONS: ChatSession[] = [
   {
     id: 'c1',
     partner: MOCK_USERS[0],
-    lastMessage: 'Máy tính còn không bạn ơi?',
+    lastMessage: 'Trần Văn B: Mình ở khu KTX NEU.',
     unreadCount: 2,
     messages: [
       { id: 'm1', senderId: 'me', text: 'Chào bạn, máy tính còn không ạ?', timestamp: '10:00' },

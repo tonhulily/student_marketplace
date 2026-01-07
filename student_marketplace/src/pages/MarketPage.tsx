@@ -12,20 +12,14 @@ export default function MarketPage() {
    const [sortOption, setSortOption] = useState<string>('newest');
 
    // Extract unique categories from data for the filter
-   const categories = ['Tất cả', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+   const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
 
    const handleCategoryChange = (category: string) => {
       setSelectedCategories(prev => {
-         if (category === 'Tất cả') {
-            return prev.includes('Tất cả') ? [] : ['Tất cả']; // Toggle All
-         }
-         // If "All" was selected, deselect it when clicking specific
-         const newPrev = prev.filter(c => c !== 'Tất cả');
-
-         if (newPrev.includes(category)) {
-            return newPrev.filter(c => c !== category);
+         if (prev.includes(category)) {
+            return prev.filter(c => c !== category);
          } else {
-            return [...newPrev, category];
+            return [...prev, category];
          }
       });
    };
@@ -33,8 +27,8 @@ export default function MarketPage() {
    const filteredProducts = PRODUCTS.filter(p => {
       const matchPrice = p.price >= priceRange.min && p.price <= priceRange.max;
 
-      const isAllSelected = selectedCategories.includes('Tất cả') || selectedCategories.length === 0;
-      const matchCategory = isAllSelected || selectedCategories.includes(p.category);
+      // If no category selected, show all. Otherwise, match selected.
+      const matchCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
 
       return matchPrice && matchCategory;
    });
@@ -176,8 +170,8 @@ function ProductCard({ product }: { product: Product }) {
                   <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg shadow-green-500/30">Còn hàng</span>
                )}
             </div>
-            <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100 relative">
-               <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="aspect-[4/3] w-full overflow-hidden bg-white relative flex items-center justify-center p-2">
+               <img src={product.image} alt={product.title} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
             </div>
             <div className="p-5 flex flex-col flex-1">
                <div className="flex justify-between items-start mb-2">

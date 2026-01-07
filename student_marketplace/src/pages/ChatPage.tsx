@@ -49,17 +49,16 @@ export default function ChatPage() {
          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
-      setSessions(prev => prev.map(s => {
-         if (s.id === activeSession.id) {
-            return {
-               ...s,
-               messages: [...s.messages, newMessage],
-               lastMessage: 'Bạn: ' + inputValue,
-               unreadCount: 0
-            };
-         }
-         return s;
-      }));
+      setSessions(prev => {
+         const updatedSessions = prev.filter(s => s.id !== activeSession.id);
+         const updatedActiveSession = {
+            ...activeSession,
+            messages: [...activeSession.messages, newMessage],
+            lastMessage: 'Bạn: ' + inputValue,
+            unreadCount: 0
+         };
+         return [updatedActiveSession, ...updatedSessions];
+      });
       setInputValue('');
    };
 
