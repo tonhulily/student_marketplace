@@ -1,16 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { useProducts } from '../contexts/ProductContext'; // Dùng context
+import { useProducts } from '../contexts/ProductContext';
 import { ArrowLeft, Heart, Share2, ShoppingCart, AlertCircle, MessageCircle, ShieldAlert } from 'lucide-react';
 import Header from '../components/Header';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext'; // Import Auth
+import { useAuth } from '../contexts/AuthContext';
 import VerifiedBadge from '../components/VerifiedBadge';
 
 export default function ProductDetailPage() {
    const { id } = useParams();
    const { products } = useProducts();
-   const { user } = useAuth(); // Lấy user hiện tại
+   const { user } = useAuth();
    const { addToCart } = useCart();
    
    const product = products.find(p => p.id === id);
@@ -147,6 +147,11 @@ export default function ProductDetailPage() {
                         <p className="text-sm text-gray-500 flex items-center gap-1">
                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600">
                               Sinh viên
+                           </span>
+                           {/* FIX: Hiện tên trường cụ thể ở đây */}
+                           <span className="text-gray-300">|</span>
+                           <span className="text-xs text-gray-500 font-medium truncate max-w-[150px]">
+                              {product.seller.school}
                            </span>
                         </p>
                         <div className="flex items-center gap-1 mt-1">

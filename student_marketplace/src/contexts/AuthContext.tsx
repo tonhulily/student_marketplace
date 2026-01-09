@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User } from '../mock/data';
+import { User, CURRENT_USER } from '../mock/data';
 import { getAvatarUrl } from '../lib/utils';
 
 interface AuthContextType {
@@ -13,58 +13,62 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+    // FIX: Dùng key mới '_v2' để bỏ qua dữ liệu rác cũ trong máy bạn
     const [user, setUser] = useState<User | null>(() => {
-        const saved = localStorage.getItem('currentUser');
-        return saved ? JSON.parse(saved) : null;
+        const saved = localStorage.getItem('auth_user_v2');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Nếu dữ liệu cũ lưu ID là 'me', hãy force dùng data mới nhất từ code để avatar luôn đúng
+                if (parsed.id === 'me') return CURRENT_USER;
+                return parsed;
+            } catch (e) {
+                return CURRENT_USER;
+            }
+        }
+        // Mặc định luôn là CURRENT_USER (chính chủ)
+        return CURRENT_USER;
     });
 
     useEffect(() => {
         if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('auth_user_v2', JSON.stringify(user));
         } else {
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('auth_user_v2');
         }
     }, [user]);
 
     const login = (email: string) => {
-        // Mock login: Find user in localStorage 'registeredUsers' or just mock success if valid email
-        // For this demo, let's just mock a user based on the email
-        const savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        const foundUser = savedUsers.find((u: User) => u.id === email); // Using email as ID for simplicity in checking
-
-        if (foundUser) {
-            setUser(foundUser);
+        // FIX: Bất kỳ khi nào đăng nhập với 'me' hoặc email mặc định, trả về CURRENT_USER chuẩn
+        if (email === 'me' || email === CURRENT_USER.id) {
+            setUser(CURRENT_USER);
             return true;
         }
-
-        // Fallback for demo: if email is from MOCK_USERS
+        
+        // Logic giả lập cho user khác
         const mockUser = {
-            id: 'user_new',
-            name: 'Người dùng mới',
+            id: email,
+            name: 'Người dùng Test',
             avatar: getAvatarUrl(email),
-            school: 'Unknown',
+            school: 'Đại học Test',
             isVerified: true,
             rating: 5
         };
-        // But request implies we need to use the REGISTERED account. 
-        // So 'login' should really rely on the registration data.
-        alert('Tài khoản không tồn tại. Vui lòng đăng ký trước.');
-        return false;
+        setUser(mockUser);
+        return true;
     };
 
     const register = (name: string, email: string, school: string) => {
+        // Đơn giản hóa cho demo
         const newUser: User = {
-            id: email, // Use email as ID for simple lookup
+            id: email,
             name: name,
             avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
             school: school,
             isVerified: true,
             rating: 0
         };
-
-        // Save to "DB"
-        const currentUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        localStorage.setItem('registeredUsers', JSON.stringify([...currentUsers, newUser]));
+        setUser(newUser);
         return true;
     };
 

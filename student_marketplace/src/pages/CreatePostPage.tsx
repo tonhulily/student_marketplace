@@ -2,20 +2,52 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Button from "../components/Button";
-import Input from "../components/Input";
-import { Upload, X, Repeat, DollarSign, Image as ImageIcon, Sparkles } from "lucide-react";
+import { Upload, X, DollarSign, Image as ImageIcon, Sparkles } from "lucide-react";
 import { PRODUCTS } from "../mock/data";
+import { useProducts } from "../contexts/ProductContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function CreatePostPage() {
    const navigate = useNavigate();
+   const { addProduct } = useProducts();
+   const { user } = useAuth(); // Lấy user chuẩn từ AuthContext v2
+   
    const [images, setImages] = useState<string[]>([]);
+   const [title, setTitle] = useState("");
+   const [price, setPrice] = useState("");
+   const [category, setCategory] = useState("");
+   const [condition, setCondition] = useState("Mới 100%");
+   const [description, setDescription] = useState("");
 
-   // Extract unique categories from mock data
    const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
 
    const handlePost = () => {
-      // Validate inputs if needed (skipping for MVP)
-      alert("Đăng tin thành công! Sản phẩm của bạn đã được gửi duyệt.");
+      if (!user) {
+          alert("Vui lòng đăng nhập (hoặc reload trang) để hệ thống nhận diện bạn!");
+          return;
+      }
+      
+      if (!title || !price || !category) {
+          alert("Vui lòng điền đầy đủ thông tin!");
+          return;
+      }
+
+      const newProduct = {
+          id: `new_${Date.now()}`,
+          title: title,
+          price: Number(price),
+          image: images.length > 0 ? images[0] : "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800",
+          category: category,
+          status: 'pending' as const, // Quan trọng: Status pending
+          condition: condition as any,
+          description: description,
+          seller: user, // Quan trọng: Gán người bán là user hiện tại (ID='me')
+          postedAt: "Vừa xong",
+          timestamp: Date.now()
+      };
+
+      addProduct(newProduct);
+      alert("Đăng tin thành công! Sản phẩm đã vào danh sách chờ duyệt.");
       navigate("/market");
    };
 
@@ -47,6 +79,7 @@ export default function CreatePostPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                <div className="md:col-span-8 space-y-6">
+                  {/* Image Upload */}
                   <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
                      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                         <ImageIcon size={20} className="text-teal-500" /> Hình ảnh sản phẩm
@@ -64,82 +97,95 @@ export default function CreatePostPage() {
                               <img src={img} className="w-full h-full object-cover" alt="preview" />
                               <button
                                  onClick={() => removeImage(idx)}
-                                 className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                                 className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
                               >
                                  <X size={14} />
                               </button>
                            </div>
                         ))}
                      </div>
-                     <p className="text-xs text-gray-400 mt-3 font-medium">* Đăng tối đa 5 ảnh. Ảnh thật giúp bán nhanh hơn!</p>
                   </div>
 
+                  {/* Info Inputs */}
                   <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 space-y-4">
                      <h3 className="font-bold text-lg mb-2">Thông tin chi tiết</h3>
 
-                     <Input label="Tên sản phẩm" placeholder="Ví dụ: Giáo trình Giải tích 1..." />
-
-                     <div className="grid grid-cols-2 gap-4">
+                     <div className="space-y-4">
                         <div>
-                           <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Danh mục</label>
-                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer capitalize">
-                              <option value="">Chọn danh mục</option>
-                              {categories.map((cat) => (
-                                 <option key={cat} value={cat}>{cat}</option>
-                              ))}
-                              <option value="other">Khác</option>
-                           </select>
+                             <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Tên sản phẩm</label>
+                             <input 
+                                type="text" 
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
+                                className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors"
+                                placeholder="Ví dụ: Giáo trình Giải tích 1..."
+                             />
                         </div>
-                        <div>
-                           <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Tình trạng</label>
-                           <select className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer">
-                              <option>Mới 100%</option>
-                              <option>Như mới (99%)</option>
-                              <option>Cũ (80-90%)</option>
-                              <option>Hư hỏng/Xác máy</option>
-                           </select>
-                        </div>
-                     </div>
 
-                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Mô tả chi tiết</label>
-                        <textarea
-                           rows={5}
-                           placeholder="Mô tả chi tiết về sản phẩm, lý do pass, địa chỉ giao dịch..."
-                           className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 p-4 text-sm focus:border-teal-500 focus:outline-none transition-colors resize-none"
-                        ></textarea>
+                         <div className="grid grid-cols-2 gap-4">
+                            <div>
+                               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Danh mục</label>
+                               <select 
+                                  value={category}
+                                  onChange={e => setCategory(e.target.value)}
+                                  className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer capitalize"
+                               >
+                                  <option value="">Chọn danh mục</option>
+                                  {categories.map((cat) => (
+                                     <option key={cat} value={cat}>{cat}</option>
+                                  ))}
+                                  <option value="Khác">Khác</option>
+                               </select>
+                            </div>
+                            <div>
+                               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Tình trạng</label>
+                               <select 
+                                  value={condition}
+                                  onChange={e => setCondition(e.target.value)}
+                                  className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors cursor-pointer"
+                               >
+                                  <option value="Mới 100%">Mới 100%</option>
+                                  <option value="Như mới (99%)">Như mới (99%)</option>
+                                  <option value="Cũ (80-90%)">Cũ (80-90%)</option>
+                                  <option value="Xác máy">Hư hỏng/Xác máy</option>
+                               </select>
+                            </div>
+                         </div>
+
+                         <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Mô tả chi tiết</label>
+                            <textarea
+                               rows={5}
+                               value={description}
+                               onChange={e => setDescription(e.target.value)}
+                               placeholder="Mô tả..."
+                               className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 p-4 text-sm focus:border-teal-500 focus:outline-none transition-colors resize-none"
+                            ></textarea>
+                         </div>
                      </div>
                   </div>
 
+                  {/* Price */}
                   <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
                      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                         <DollarSign size={20} className="text-green-600" /> Giá bán
                      </h3>
-
                      <div className="mb-6">
-                        <Input label="Giá mong muốn (VNĐ)" type="number" placeholder="Nhập giá bán..." />
+                        <input 
+                            type="number"
+                            value={price}
+                            onChange={e => setPrice(e.target.value)}
+                            className="w-full h-12 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 text-sm focus:border-teal-500 focus:outline-none transition-colors"
+                            placeholder="Nhập giá bán (VNĐ)..."
+                        />
                      </div>
-
-
                   </div>
-
                </div>
 
+               {/* Sidebar Actions */}
                <div className="md:col-span-4 space-y-6">
                   <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 sticky top-24">
                      <h3 className="font-bold text-lg mb-4">Đăng tin ngay</h3>
-                     <ul className="text-sm text-gray-500 space-y-3 mb-6">
-                        <li className="flex gap-2">
-                           <span className="text-green-500">✓</span> Tin sẽ được duyệt trong 5 phút
-                        </li>
-                        <li className="flex gap-2">
-                           <span className="text-green-500">✓</span> Hiển thị với 10,000+ sinh viên
-                        </li>
-                        <li className="flex gap-2">
-                           <span className="text-green-500">✓</span> Miễn phí 5 tin đăng mỗi tháng
-                        </li>
-                     </ul>
-
                      <div className="space-y-3">
                         <Button
                            onClick={handlePost}
@@ -152,14 +198,6 @@ export default function CreatePostPage() {
                         </Button>
                      </div>
                   </div>
-
-                  <div className="bg-blue-50 p-6 rounded-[2rem] border border-blue-100">
-                     <h4 className="font-bold text-blue-800 mb-2">Lưu ý an toàn</h4>
-                     <p className="text-xs text-blue-600/80 leading-relaxed">
-                        Không chuyển khoản trước khi nhận hàng. Nên giao dịch trực tiếp tại trường học hoặc nơi đông người.
-                     </p>
-                  </div>
-
                </div>
             </div>
          </main>

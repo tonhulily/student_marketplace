@@ -3,27 +3,30 @@ import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import { Search, Send, Image, Smile, MoreVertical, ArrowLeft, ShieldCheck } from 'lucide-react';
-import { useChat } from '../contexts/ChatContext'; // SỬ DỤNG CONTEXT
+import { useChat } from '../contexts/ChatContext';
 
 export default function ChatPage() {
    const { userId } = useParams();
-   const { sessions, sendMessage, createSession } = useChat(); // Lấy data từ Context
+   const { sessions, sendMessage, createSession } = useChat();
    const [activeSessionId, setActiveSessionId] = useState<string>('');
    const [inputValue, setInputValue] = useState('');
 
-   // Logic khởi tạo: Nếu có userId trên URL, tìm hoặc tạo session
+   // FIX: Lọc bỏ các session rỗng (ghost users) chỉ hiển thị khi có tin nhắn hoặc đang được chọn
+   const activeSessions = sessions.filter(s => s.messages.length > 0 || s.id === activeSessionId);
+
+   // Logic khởi tạo
    useEffect(() => {
       if (userId) {
          const sessId = createSession(userId);
          setActiveSessionId(sessId);
       } else {
-         if (sessions.length > 0 && !activeSessionId) {
-            setActiveSessionId(sessions[0].id);
+         if (activeSessions.length > 0 && !activeSessionId) {
+            setActiveSessionId(activeSessions[0].id);
          }
       }
-   }, [userId]); // Chỉ chạy khi userId thay đổi
+   }, [userId, activeSessions.length]); // Thêm dependency an toàn
 
-   const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+   const activeSession = activeSessions.find(s => s.id === activeSessionId) || activeSessions[0];
 
    const handleSendMessage = () => {
       if (!inputValue.trim() || !activeSession) return;
@@ -32,7 +35,7 @@ export default function ChatPage() {
    };
 
    // Nếu không có session nào
-   if (!activeSession && sessions.length === 0) {
+   if (!activeSession && activeSessions.length === 0) {
        return (
            <div className="h-screen bg-[#F8F9FC] flex flex-col">
                <Header />
@@ -60,7 +63,8 @@ export default function ChatPage() {
                </div>
 
                <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-200">
-                  {sessions.map(session => (
+                  {/* FIX: Map qua activeSessions đã lọc */}
+                  {activeSessions.map(session => (
                      <div
                         key={session.id}
                         onClick={() => setActiveSessionId(session.id)}
