@@ -12,35 +12,37 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Định nghĩa key cố định, nhưng vì dùng sessionStorage nên nó sẽ tự xóa khi đóng tab
+const STORAGE_KEY = 'marketplace_auth_session';
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // FIX: Sửa logic khởi tạo state
+    // FIX: Dùng sessionStorage thay vì localStorage
     const [user, setUser] = useState<User | null>(() => {
-        const saved = localStorage.getItem('auth_user_v3');
-        if (saved) {
-            try {
+        try {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
                 const parsed = JSON.parse(saved);
-                // Nếu là 'me' thì lấy data mới nhất từ code để đồng bộ
+                // Logic backdoor: Nếu là 'me' thì luôn lấy data chuẩn nhất từ code
                 if (parsed.id === 'me') return CURRENT_USER;
                 return parsed;
-            } catch (e) {
-                return null;
             }
+        } catch (e) {
+            return null;
         }
-        // QUAN TRỌNG: Nếu không có gì trong storage, trả về null (Chưa đăng nhập)
-        // Thay vì trả về CURRENT_USER như trước đây.
-        return null; 
+        // Mặc định là null (Guest)
+        return null;
     });
 
     useEffect(() => {
         if (user) {
-            localStorage.setItem('auth_user_v2', JSON.stringify(user));
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(user));
         } else {
-            localStorage.removeItem('auth_user_v2');
+            sessionStorage.removeItem(STORAGE_KEY);
         }
     }, [user]);
 
     const login = (email: string) => {
-        // Logic login vẫn giữ nguyên
+        // Logic đăng nhập đặc quyền cho 'me' hoặc 'admin'
         if (email === 'me' || email === CURRENT_USER.id || email === 'admin') {
             setUser(CURRENT_USER);
             return true;
@@ -54,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return true;
         }
 
-        // Mock login cho user test khác
+        // Mock login
         const mockUser = {
             id: email,
             name: 'Người dùng Test',
@@ -77,18 +79,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             rating: 0
         };
         
-        // Lưu user mới đăng ký vào list users
+        // Lưu user đăng ký vào localStorage (để dữ liệu đăng ký không bị mất)
         const currentUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
         localStorage.setItem('registeredUsers', JSON.stringify([...currentUsers, newUser]));
         
-        // Đăng nhập luôn sau khi đăng ký
         setUser(newUser);
         return true;
     };
 
     const logout = () => {
         setUser(null);
-        // Có thể thêm điều hướng về trang login/home ở đây nếu cần thiết ở tầng component
     };
 
     return (

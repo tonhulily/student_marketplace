@@ -9,23 +9,26 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
+// Dùng sessionStorage để dữ liệu tự reset khi đóng tab/trình duyệt
+const STORAGE_KEY = 'marketplace_products_session';
+
 export function ProductProvider({ children }: { children: React.ReactNode }) {
-    // FIX: Dùng key mới '_v2' để đảm bảo load lại Mock Data chuẩn
     const [products, setProducts] = useState<Product[]>(() => {
-        const saved = localStorage.getItem('marketplace_products_v3');
-        if (saved) {
-            try {
+        try {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
                 return JSON.parse(saved);
-            } catch (e) {
-                return PRODUCTS;
             }
+        } catch (e) {
+            return PRODUCTS;
         }
+        // Mặc định luôn load Mock Data ban đầu khi mở tab mới
         return PRODUCTS;
     });
 
-    // Lưu ngay khi có thay đổi
+    // Lưu vào sessionStorage mỗi khi danh sách thay đổi
     useEffect(() => {
-        localStorage.setItem('marketplace_products_v3', JSON.stringify(products));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(products));
     }, [products]);
 
     const addProduct = (product: Product) => {
@@ -34,7 +37,6 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
     };
 
     const getProductsByUser = (userId: string) => {
-        // Filter chính xác theo ID
         return products.filter(p => p.seller.id === userId);
     };
 
