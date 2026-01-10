@@ -12,7 +12,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export function ProductProvider({ children }: { children: React.ReactNode }) {
     // FIX: Dùng key mới '_v2' để đảm bảo load lại Mock Data chuẩn
     const [products, setProducts] = useState<Product[]>(() => {
-        const saved = localStorage.getItem('marketplace_products_v2');
+        const saved = localStorage.getItem('marketplace_products_v3');
         if (saved) {
             try {
                 return JSON.parse(saved);
@@ -25,7 +25,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
 
     // Lưu ngay khi có thay đổi
     useEffect(() => {
-        localStorage.setItem('marketplace_products_v2', JSON.stringify(products));
+        localStorage.setItem('marketplace_products_v3', JSON.stringify(products));
     }, [products]);
 
     const addProduct = (product: Product) => {

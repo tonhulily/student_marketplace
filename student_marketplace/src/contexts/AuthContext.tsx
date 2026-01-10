@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     // FIX: Sửa logic khởi tạo state
     const [user, setUser] = useState<User | null>(() => {
-        const saved = localStorage.getItem('auth_user_v2');
+        const saved = localStorage.getItem('auth_user_v3');
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
