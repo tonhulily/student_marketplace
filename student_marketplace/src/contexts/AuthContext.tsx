@@ -12,25 +12,23 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Định nghĩa key cố định, nhưng vì dùng sessionStorage nên nó sẽ tự xóa khi đóng tab
+// Key lưu session (dùng sessionStorage để tự xóa khi tắt tab)
 const STORAGE_KEY = 'marketplace_auth_session';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // FIX: Dùng sessionStorage thay vì localStorage
+    // Khởi tạo state
     const [user, setUser] = useState<User | null>(() => {
         try {
             const saved = sessionStorage.getItem(STORAGE_KEY);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                // Logic backdoor: Nếu là 'me' thì luôn lấy data chuẩn nhất từ code
                 if (parsed.id === 'me') return CURRENT_USER;
                 return parsed;
             }
         } catch (e) {
             return null;
         }
-        // Mặc định là null (Guest)
-        return null;
+        return null; // Mặc định là Guest
     });
 
     useEffect(() => {
@@ -42,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [user]);
 
     const login = (email: string) => {
-        // Logic đăng nhập đặc quyền cho 'me' hoặc 'admin'
         if (email === 'me' || email === CURRENT_USER.id || email === 'admin') {
             setUser(CURRENT_USER);
             return true;
@@ -56,7 +53,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return true;
         }
 
-        // Mock login
         const mockUser = {
             id: email,
             name: 'Người dùng Test',
@@ -79,7 +75,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             rating: 0
         };
         
-        // Lưu user đăng ký vào localStorage (để dữ liệu đăng ký không bị mất)
         const currentUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
         localStorage.setItem('registeredUsers', JSON.stringify([...currentUsers, newUser]));
         
@@ -87,8 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return true;
     };
 
+    // FIX: Thêm logic điều hướng về trang chủ khi logout
     const logout = () => {
         setUser(null);
+        sessionStorage.removeItem(STORAGE_KEY); // Xóa session ngay lập tức
+        window.location.href = '/'; // Chuyển hướng cứng về root (localhost:3000)
     };
 
     return (
