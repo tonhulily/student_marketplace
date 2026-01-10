@@ -13,21 +13,22 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // FIX: Dùng key mới '_v2' để bỏ qua dữ liệu rác cũ trong máy bạn
+    // FIX: Sửa logic khởi tạo state
     const [user, setUser] = useState<User | null>(() => {
         const saved = localStorage.getItem('auth_user_v2');
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                // Nếu dữ liệu cũ lưu ID là 'me', hãy force dùng data mới nhất từ code để avatar luôn đúng
+                // Nếu là 'me' thì lấy data mới nhất từ code để đồng bộ
                 if (parsed.id === 'me') return CURRENT_USER;
                 return parsed;
             } catch (e) {
-                return CURRENT_USER;
+                return null;
             }
         }
-        // Mặc định luôn là CURRENT_USER (chính chủ)
-        return CURRENT_USER;
+        // QUAN TRỌNG: Nếu không có gì trong storage, trả về null (Chưa đăng nhập)
+        // Thay vì trả về CURRENT_USER như trước đây.
+        return null; 
     });
 
     useEffect(() => {
@@ -39,13 +40,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [user]);
 
     const login = (email: string) => {
-        // FIX: Bất kỳ khi nào đăng nhập với 'me' hoặc email mặc định, trả về CURRENT_USER chuẩn
-        if (email === 'me' || email === CURRENT_USER.id) {
+        // Logic login vẫn giữ nguyên
+        if (email === 'me' || email === CURRENT_USER.id || email === 'admin') {
             setUser(CURRENT_USER);
             return true;
         }
-        
-        // Logic giả lập cho user khác
+
+        const savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        const foundUser = savedUsers.find((u: User) => u.id === email);
+
+        if (foundUser) {
+            setUser(foundUser);
+            return true;
+        }
+
+        // Mock login cho user test khác
         const mockUser = {
             id: email,
             name: 'Người dùng Test',
@@ -59,7 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const register = (name: string, email: string, school: string) => {
-        // Đơn giản hóa cho demo
         const newUser: User = {
             id: email,
             name: name,
@@ -68,12 +76,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             isVerified: true,
             rating: 0
         };
+        
+        // Lưu user mới đăng ký vào list users
+        const currentUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        localStorage.setItem('registeredUsers', JSON.stringify([...currentUsers, newUser]));
+        
+        // Đăng nhập luôn sau khi đăng ký
         setUser(newUser);
         return true;
     };
 
     const logout = () => {
         setUser(null);
+        // Có thể thêm điều hướng về trang login/home ở đây nếu cần thiết ở tầng component
     };
 
     return (
