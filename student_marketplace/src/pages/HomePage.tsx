@@ -55,7 +55,7 @@ export default function HomePage() {
           
           <div className="space-y-8 z-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-700 font-bold text-sm border border-teal-100 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <Sparkles size={16} /> <span>Dành riêng cho sinh viên Việt Nam</span>
+              <Sparkles size={16} /> <span>Dành riêng cho sinh viên</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-gray-900">

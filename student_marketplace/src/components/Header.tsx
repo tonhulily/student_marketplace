@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { Search, ShoppingCart, MessageCircle, LogOut, X, PlusCircle } from 'lucide-react'; // FIX: Import PlusCircle
+import { Search, ShoppingCart, MessageCircle, LogOut, X, PlusCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import Button from './Button';
+import logo from '../assets/logo.png'; // FIX: Import logo chính xác
 
 export default function Header() {
     const { user, logout } = useAuth();
@@ -40,18 +41,15 @@ export default function Header() {
     return (
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
             <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-4">
-                {/* LOGO */}
+                {/* LOGO & BRAND NAME FIX */}
                 <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-                    <div className="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-teal-500/30">
-                        S
-                    </div>
+                    <img src={logo} alt="Green2Hand Logo" className="w-10 h-10 object-contain" />
                     <span className="font-black text-xl tracking-tight text-gray-900 hidden sm:block">
-                        Student<span className="text-teal-600">Market</span>
+                        Green<span className="text-teal-600">2Hand</span>
                     </span>
                 </Link>
 
                 {/* SEARCH BAR - DESKTOP */}
-                {/* Chỉ hiện nếu KHÔNG PHẢI trang đăng tin */}
                 {!isCreatePostPage && (
                     <div className="flex-1 max-w-xl relative hidden md:block group">
                         <input 
@@ -80,13 +78,13 @@ export default function Header() {
 
                     {user ? (
                         <>
-                            {/* NEW: Nút Đăng Bán (Desktop) */}
+                            {/* Nút Đăng Bán (Desktop) */}
                             <Link to="/create-post" className="hidden md:flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-teal-500/20 active:scale-95 mr-2">
                                 <PlusCircle size={18} />
                                 <span>Đăng bán</span>
                             </Link>
 
-                            {/* NEW: Nút Đăng Bán (Mobile - Icon only) */}
+                            {/* Nút Đăng Bán (Mobile) */}
                             <Link to="/create-post" className="md:hidden w-10 h-10 rounded-full bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center hover:bg-teal-100 transition-colors">
                                 <PlusCircle size={20} />
                             </Link>
@@ -135,7 +133,7 @@ export default function Header() {
                 </div>
             </div>
 
-            {/* MOBILE SEARCH BAR (Slide down) */}
+            {/* MOBILE SEARCH BAR */}
             {showMobileSearch && !isCreatePostPage && (
                 <div className="md:hidden px-4 pb-4 border-b border-gray-100 animate-in slide-in-from-top-2">
                     <div className="relative">
