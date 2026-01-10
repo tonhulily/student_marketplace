@@ -16,12 +16,13 @@ export interface Product {
   price: number;
   image: string;
   category: string;
-  status: 'available' | 'sold';
+  // UPDATE: Thêm trạng thái 'pending'
+  status: 'available' | 'sold' | 'pending';
   condition: 'Mới 100%' | 'Như mới (99%)' | 'Cũ (80-90%)' | 'Xác máy';
   description: string;
   seller: User;
   postedAt: string;
-  timestamp: number; // Added for sorting
+  timestamp: number;
 }
 
 export interface Message {
@@ -120,6 +121,20 @@ export const PRODUCTS: Product[] = [
     postedAt: '5 giờ trước',
     timestamp: Date.now() - 5 * 60 * 60 * 1000,
   },
+  // UPDATE: Thêm sản phẩm mẫu đang chờ duyệt để test
+  {
+    id: 'p5',
+    title: 'Loa JBL Go 3 (Chờ duyệt)',
+    price: 750000,
+    image: 'https://images.unsplash.com/photo-1615247001958-f4bc92fa6a4a?auto=format&fit=crop&q=80&w=800',
+    category: 'Công nghệ',
+    status: 'pending',
+    condition: 'Như mới (99%)',
+    description: 'Test tính năng sản phẩm chờ duyệt.',
+    seller: CURRENT_USER,
+    postedAt: 'Vừa xong',
+    timestamp: Date.now(),
+  },
 ];
 
 export const CHAT_SESSIONS: ChatSession[] = [
@@ -134,4 +149,4 @@ export const CHAT_SESSIONS: ChatSession[] = [
       { id: 'm3', senderId: 'u1', text: 'Mình ở khu KTX NEU.', timestamp: '10:06' },
     ]
   },
-]
+];

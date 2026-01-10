@@ -1,43 +1,53 @@
-
 import { useParams, Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { PRODUCTS } from '../mock/data';
-import { ArrowLeft, MapPin, ShieldCheck, MessageCircle, Heart, Share2, School, ShoppingCart, AlertCircle } from 'lucide-react';
+import { useProducts } from '../contexts/ProductContext';
+import { ArrowLeft, Heart, Share2, ShoppingCart, AlertCircle, MessageCircle, ShieldAlert } from 'lucide-react';
 import Header from '../components/Header';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 import VerifiedBadge from '../components/VerifiedBadge';
 
 export default function ProductDetailPage() {
    const { id } = useParams();
+   const { products } = useProducts();
+   const { user } = useAuth();
    const { addToCart } = useCart();
-   const product = PRODUCTS.find(p => p.id === id);
+   
+   const product = products.find(p => p.id === id);
 
    if (!product) return <div className="text-center py-20">Không tìm thấy sản phẩm</div>;
 
    const isSold = product.status === 'sold';
+   const isPending = product.status === 'pending';
+   const isOwner = user?.id === product.seller.id;
 
    return (
       <div className="min-h-screen bg-[#F8F9FC] pb-20 pt-6">
          <Header />
          <div className="max-w-6xl mx-auto px-4">
 
-            {/* Breadcrumb / Back */}
             <Link to="/market" className="inline-flex items-center text-gray-500 hover:text-teal-600 font-bold mb-6 transition-colors">
                <ArrowLeft size={20} className="mr-2" /> Quay lại chợ
             </Link>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-
                {/* LEFT: IMAGES */}
                <div className="space-y-4">
-                  <div className="aspect-square bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100">
+                  <div className="aspect-square bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 relative">
                      <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                     {isPending && (
+                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                             <span className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2">
+                                 <ShieldAlert/> Đang chờ duyệt
+                             </span>
+                         </div>
+                     )}
                   </div>
                   {/* Gallery Mockup */}
                   <div className="grid grid-cols-4 gap-4">
                      {[1, 2, 3, 4].map((i) => (
                         <div key={i} className="aspect-square rounded-2xl bg-white border border-gray-200 overflow-hidden cursor-pointer hover:border-teal-500 transition-colors">
-                           <img src={product.image} className="w-full h-full object-cover opacity-70 hover:opacity-100" />
+                           <img src={product.image} className="w-full h-full object-cover opacity-70 hover:opacity-100" alt="" />
                         </div>
                      ))}
                   </div>
@@ -74,7 +84,6 @@ export default function ProductDetailPage() {
                         {product.price.toLocaleString('vi-VN')}đ
                      </div>
 
-                     {/* Condition Box */}
                      <div className="flex gap-4 mb-8">
                         <div className="bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
                            <span className="block text-xs text-gray-400 font-bold uppercase">Tình trạng</span>
@@ -90,9 +99,17 @@ export default function ProductDetailPage() {
                         {product.description}
                      </p>
 
-                     {/* Actions */}
+                     {/* Actions Logic */}
                      <div className="flex flex-col gap-3">
-                        {!isSold ? (
+                        {isPending ? (
+                            <div className="bg-orange-50 text-orange-600 p-4 rounded-xl text-center font-bold border border-orange-100">
+                                Sản phẩm đang chờ duyệt, chưa thể giao dịch.
+                            </div>
+                        ) : isOwner ? (
+                             <div className="bg-gray-100 text-gray-500 p-4 rounded-xl text-center font-bold border border-gray-200">
+                                 Đây là sản phẩm của bạn.
+                             </div>
+                        ) : !isSold ? (
                            <div className="grid grid-cols-2 gap-3">
                               <Button
                                  onClick={() => addToCart(product)}
@@ -111,24 +128,30 @@ export default function ProductDetailPage() {
                               Sản phẩm này đã được bán
                            </Button>
                         )}
-
-
                      </div>
                   </div>
 
-                  {/* SELLER INFO CARD */}
-                  <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mt-6 flex items-center gap-4">
+                  {/* SELLER LINK */}
+                  <Link 
+                     to={`/profile/${product.seller.id}`} 
+                     className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mt-6 flex items-center gap-4 group hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer"
+                  >
                      <div className="relative">
-                        <img src={product.seller.avatar} alt="Seller" className="w-16 h-16 rounded-full border-2 border-white shadow-md" />
+                        <img src={product.seller.avatar} alt="Seller" className="w-16 h-16 rounded-full border-2 border-white shadow-md group-hover:border-teal-500 transition-colors" />
                         <div className="absolute -bottom-1 -right-1 bg-white text-green-500 p-1 rounded-full shadow-sm">
                            <VerifiedBadge schoolName={product.seller.school} />
                         </div>
                      </div>
                      <div>
-                        <h3 className="font-bold text-lg text-gray-900">{product.seller.name}</h3>
+                        <h3 className="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">{product.seller.name}</h3>
                         <p className="text-sm text-gray-500 flex items-center gap-1">
                            <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600">
                               Sinh viên
+                           </span>
+                           {/* FIX: Hiện tên trường cụ thể ở đây */}
+                           <span className="text-gray-300">|</span>
+                           <span className="text-xs text-gray-500 font-medium truncate max-w-[150px]">
+                              {product.seller.school}
                            </span>
                         </p>
                         <div className="flex items-center gap-1 mt-1">
@@ -138,10 +161,10 @@ export default function ProductDetailPage() {
                            <span className="text-xs text-gray-400 ml-1">({product.seller.rating})</span>
                         </div>
                      </div>
-                     <Button variant="ghost" className="ml-auto text-teal-600 font-bold">
+                     <div className="ml-auto text-teal-600 font-bold hover:bg-teal-50 px-4 py-2 rounded-xl transition-colors">
                         Xem trang
-                     </Button>
-                  </div>
+                     </div>
+                  </Link>
                </div>
             </div>
          </div>

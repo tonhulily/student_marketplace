@@ -32,7 +32,7 @@ export default function RegisterPage() {
     }
 
     // 2. Mock Sending Verification Code
-    alert(`Mã xác thực đã được gửi đến ${formData.email}. (Mã mẫu: 123456)`);
+    alert(`Mã xác thực đã được gửi đến ${formData.email}.`);
 
     // 3. Prompt for Code
     const code = prompt('Nhập mã xác thực của bạn:');
