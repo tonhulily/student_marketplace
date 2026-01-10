@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.da5aee5e.css",
-    "main.js": "/static/js/main.a2d7e10f.js",
+    "main.css": "/static/css/main.6bc44248.css",
+    "main.js": "/static/js/main.3d6db275.js",
     "static/media/casio_580vnx.png": "/static/media/casio_580vnx.23fa3a674c92ca667ccb.png",
     "static/media/calculus_ii.jpg": "/static/media/calculus_ii.48415aacc7f65ab7650b.jpg",
     "static/media/logo.png": "/static/media/logo.e52b2bf6c7a3059e99db.png",
     "index.html": "/index.html",
-    "main.da5aee5e.css.map": "/static/css/main.da5aee5e.css.map",
-    "main.a2d7e10f.js.map": "/static/js/main.a2d7e10f.js.map"
+    "main.6bc44248.css.map": "/static/css/main.6bc44248.css.map",
+    "main.3d6db275.js.map": "/static/js/main.3d6db275.js.map"
   },
   "entrypoints": [
-    "static/css/main.da5aee5e.css",
-    "static/js/main.a2d7e10f.js"
+    "static/css/main.6bc44248.css",
+    "static/js/main.3d6db275.js"
   ]
 }
