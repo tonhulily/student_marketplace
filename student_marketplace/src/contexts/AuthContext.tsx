@@ -12,17 +12,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Key lưu session (dùng sessionStorage để tự xóa khi tắt tab)
 const STORAGE_KEY = 'marketplace_auth_session';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // Khởi tạo state
     const [user, setUser] = useState<User | null>(() => {
         try {
             const saved = sessionStorage.getItem(STORAGE_KEY);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                if (parsed.id === 'me') return CURRENT_USER;
+                if (parsed.id === 'abc@sis.hust.edu.vn') return CURRENT_USER;
                 return parsed;
             }
         } catch (e) {
@@ -40,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [user]);
 
     const login = (email: string) => {
-        if (email === 'me' || email === CURRENT_USER.id || email === 'admin') {
+        if (email === 'abc@sis.hust.edu.vn' || email === CURRENT_USER.id || email === 'admin') {
             setUser(CURRENT_USER);
             return true;
         }

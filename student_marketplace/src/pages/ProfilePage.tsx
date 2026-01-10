@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const { getProductsByUser } = useProducts();
 
   const isMyProfile =
-    userId === 'me' ||
+    userId === 'abc@sis.hust.edu.vn' ||
     (!userId && currentUser) ||
     (currentUser && currentUser.id === userId);
 

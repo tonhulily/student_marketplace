@@ -19,7 +19,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        <div className="hidden md:flex gap-8 font-semibold text-gray-500 text-sm">
+        <div className="hidden md:flex gap-8 font-semibold text-gray-500 text-base">
           <Link to="/market" className="hover:text-teal-600 transition-colors">
             Khám phá
           </Link>
@@ -39,10 +39,10 @@ export default function HomePage() {
           ) : (
             <>
               <Link to="/login">
-                <Button variant="outline" size="sm" className="rounded-xl">Đăng nhập</Button>
+                <Button variant="outline" className="rounded-xl">Đăng nhập</Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="rounded-xl">Đăng ký</Button>
+                <Button className="rounded-xl">Đăng ký</Button>
               </Link>
             </>
           )}
@@ -50,14 +50,12 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative px-6 pt-12 md:pt-20 max-w-7xl mx-auto">
+      <section className="relative px-6 pt-12 md:pt-6 max-w-7xl mx-auto">
+        <div className="flex w-fit mx-auto items-center gap-2 px-4 py-2 mb-6 rounded-full bg-teal-50 text-teal-700 font-bold text-sm border border-teal-100 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <Sparkles size={16} /> <span>Dành riêng cho sinh viên Việt Nam</span>
+        </div>
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          
           <div className="space-y-8 z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-700 font-bold text-sm border border-teal-100 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <Sparkles size={16} /> <span>Dành riêng cho sinh viên Việt Nam</span>
-            </div>
-            
             <h1 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-gray-900">
               Trao đổi đồ cũ <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">

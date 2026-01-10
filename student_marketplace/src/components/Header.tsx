@@ -1,107 +1,155 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import Button from "../components/Button";
-import { Search, Bell, MessageCircle, PlusCircle, ShoppingCart } from "lucide-react";
-import { useCart } from "../contexts/CartContext";
-import { useAuth } from "../contexts/AuthContext";
-import logoImg from '../assets/logo.png';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { Search, ShoppingCart, MessageCircle, LogOut, X, PlusCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
+import Button from './Button';
+import logo from '../assets/logo.png'; // FIX: Import logo chính xác
 
 export default function Header() {
-  const { cartItems } = useCart();
-  const { user, logout } = useAuth();
-  const location = useLocation();
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
-  
-  // State cho thông báo
-  const [showNoti, setShowNoti] = useState(false);
+    const { user, logout } = useAuth();
+    const { cartItems } = useCart();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+    
+    // Lấy từ khóa từ URL để khởi tạo state
+    const [keyword, setKeyword] = useState(searchParams.get('search') || '');
+    
+    // State cho tìm kiếm mobile
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
 
-  return (
-    <header className="sticky top-0 z-50 w-full bg-[#F8F9FC]/80 backdrop-blur-xl border-b border-gray-200/50 supports-[backdrop-filter]:bg-[#F8F9FC]/60">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+    // Đồng bộ ô input khi URL thay đổi (ví dụ user bấm back)
+    useEffect(() => {
+        setKeyword(searchParams.get('search') || '');
+    }, [searchParams]);
 
-        {/* LOGO */}
-        <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-          <div className="h-16 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <img src={logoImg} alt="Green2Hand" className="h-full w-auto object-contain" />
-          </div>
-        </Link>
+    // Ẩn thanh tìm kiếm nếu đang ở trang Đăng tin
+    const isCreatePostPage = location.pathname === '/create-post' || location.pathname === '/post';
 
-        {/* SEARCH BAR (Giữ nguyên) */}
-        <div className="hidden md:flex flex-1 max-w-lg bg-white rounded-2xl border border-gray-200 focus-within:ring-2 focus-within:ring-teal-500/20 transition-all shadow-sm">
-           <div className="pl-4 flex items-center pointer-events-none text-gray-400"><Search size={20} /></div>
-           <input type="text" placeholder="Tìm giáo trình, đồ dùng..." className="w-full bg-transparent border-none py-3 px-3 text-sm focus:ring-0 text-gray-800 placeholder:text-gray-400" />
-        </div>
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent) => {
+        if ((e as React.KeyboardEvent).key === 'Enter' || e.type === 'click') {
+            if (keyword.trim()) {
+                navigate(`/market?search=${encodeURIComponent(keyword)}`);
+                setShowMobileSearch(false); // Đóng mobile search sau khi tìm
+            } else {
+                navigate('/market');
+            }
+        }
+    };
 
-        {/* ACTIONS */}
-        <div className="flex items-center gap-3 md:gap-4">
-          {!user ? (
-              !isAuthPage && (
-                <>
-                    <Link to="/login"><Button variant="outline" className="rounded-xl">Đăng nhập</Button></Link>
-                    <Link to="/register"><Button className="rounded-xl">Đăng ký</Button></Link>
-                </>
-              )
-          ) : (
-             <>
-                <Link to="/create-post">
-                    <Button className="hidden md:flex rounded-xl bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/30 gap-2">
-                        <PlusCircle size={18} /> Đăng tin
-                    </Button>
+    return (
+        <header className="sticky top-0 z-50  transition-all">
+            <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-4">
+                {/* LOGO & BRAND NAME FIX */}
+                <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+                    <img src={logo} alt="Green2Hand Logo" className="w-10 h-10 object-contain" />
+                    <span className="font-black text-xl tracking-tight text-gray-900 hidden sm:block">
+                        Green<span className="text-teal-600">2Hand</span>
+                    </span>
                 </Link>
 
-                <Link to="/market" className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-full"><Search size={24} /></Link>
-                
-                {/* ICON THÔNG BÁO */}
-                <div className="relative">
-                    <button 
-                        onClick={() => setShowNoti(!showNoti)}
-                        className="p-2 text-gray-500 hover:bg-white hover:text-teal-600 rounded-full transition-all relative"
-                    >
-                        <Bell size={24} />
-                    </button>
-                    {showNoti && (
-                        <div className="absolute top-12 right-0 w-64 bg-white shadow-xl rounded-xl border border-gray-100 p-4 text-center text-sm text-gray-500 z-50 animate-in fade-in zoom-in duration-200">
-                            <span className="block font-bold text-gray-800 mb-1">Thông báo</span>
-                            Hiện chưa có thông báo mới.
+                {/* SEARCH BAR - DESKTOP */}
+                {!isCreatePostPage && (
+                    <div className="flex-1 max-w-xl relative hidden md:block group">
+                        <input 
+                            type="text" 
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            onKeyDown={handleSearch}
+                            placeholder="Tìm kiếm giáo trình, đồ dùng..." 
+                            className="w-full h-12 bg-gray-100/50 border-transparent rounded-2xl pl-12 pr-4 focus:ring-2 focus:ring-teal-500/20 focus:bg-white focus:border-teal-500 transition-all font-medium text-gray-800"
+                        />
+                        <Search className="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-teal-600 transition-colors" size={20} />
+                    </div>
+                )}
+
+                {/* ACTIONS */}
+                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                    {/* Search Icon Mobile Toggle */}
+                    {!isCreatePostPage && (
+                        <button 
+                            onClick={() => setShowMobileSearch(!showMobileSearch)}
+                            className="md:hidden w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:scale-95 transition-transform"
+                        >
+                            {showMobileSearch ? <X size={20} /> : <Search size={20} />}
+                        </button>
+                    )}
+
+                    {user ? (
+                        <>
+                            {/* Nút Đăng Bán (Desktop) */}
+                            <Link to="/create-post" className="hidden md:flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-teal-500/20 active:scale-95 mr-2">
+                                <PlusCircle size={18} />
+                                <span>Đăng bán</span>
+                            </Link>
+
+                            {/* Nút Đăng Bán (Mobile) */}
+                            <Link to="/create-post" className="md:hidden w-10 h-10 rounded-full bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center hover:bg-teal-100 transition-colors">
+                                <PlusCircle size={20} />
+                            </Link>
+
+                            <Link to="/cart" className="relative w-10 h-10 rounded-full bg-gray-50 hover:bg-teal-50 flex items-center justify-center transition-colors group">
+                                <ShoppingCart size={20} className="text-gray-600 group-hover:text-teal-600" />
+                                {cartItems.length > 0 && (
+                                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+                                        {cartItems.length}
+                                    </span>
+                                )}
+                            </Link>
+
+                            <Link to="/chat" className="w-10 h-10 rounded-full bg-gray-50 hover:bg-teal-50 flex items-center justify-center transition-colors group">
+                                <MessageCircle size={20} className="text-gray-600 group-hover:text-teal-600" />
+                            </Link>
+                            
+                            <div className="h-8 w-[1px] bg-gray-200 mx-1 hidden sm:block"></div>
+
+                            {/* PROFILE */}
+                            <Link to="/profile/me" className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
+                                <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover border border-gray-200" />
+                                <span className="font-bold text-sm text-gray-700 hidden lg:block max-w-[100px] truncate">
+                                    {user.name}
+                                </span>
+                            </Link>
+                            
+                            <button 
+                                onClick={logout}
+                                className="w-10 h-10 rounded-full bg-gray-50 hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
+                                title="Đăng xuất"
+                            >
+                                <LogOut size={18} />
+                            </button>
+                        </>
+                    ) : (
+                        <div className="flex gap-3">
+                            <Link to="/login">
+                                <Button variant="outline" className="rounded-xl">Đăng nhập</Button>
+                            </Link>
+                            <Link to="/register">
+                                <Button className="rounded-xl">Đăng ký</Button>
+                            </Link>
                         </div>
                     )}
                 </div>
+            </div>
 
-                <Link to="/chat" className="p-2 text-gray-500 hover:bg-white hover:text-teal-600 rounded-full transition-all relative">
-                    <MessageCircle size={24} />
-                </Link>
-
-                <Link to="/cart" className="p-2 text-gray-500 hover:bg-white hover:text-teal-600 rounded-full transition-all relative">
-                    <ShoppingCart size={24} />
-                    {cartItems.length > 0 && <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#F8F9FC]">{cartItems.length}</span>}
-                </Link>
-
-                {/* USER PROFILE & LOGOUT */}
-                <div className="flex items-center gap-2 group relative">
-                    {/* Link tới Profile */}
-                    <Link to="/profile/me" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 p-[2px] shadow-md">
-                            <img src={user.avatar} className="w-full h-full rounded-full bg-white border-2 border-white object-cover" alt={user.name} />
-                        </div>
-                        <div className="hidden md:block text-left">
-                            <p className="text-xs font-bold text-gray-900">{user.name}</p>
-                            <p className="text-[10px] text-teal-600 font-bold">Verified</p>
-                        </div>
-                    </Link>
-
-                    {/* Dropdown Logout (Tách riêng để không dính Link) */}
-                    <div className="absolute top-8 right-0 w-32 pt-4 hidden group-hover:block z-50">
-                        <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
-                            <button onClick={logout} className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 font-bold">
-                                Đăng xuất
-                            </button>
-                        </div>
+            {/* MOBILE SEARCH BAR */}
+            {showMobileSearch && !isCreatePostPage && (
+                <div className="md:hidden px-4 pb-4 border-b border-gray-100 animate-in slide-in-from-top-2">
+                    <div className="relative">
+                        <input 
+                            type="text" 
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            onKeyDown={handleSearch}
+                            autoFocus
+                            placeholder="Tìm kiếm..." 
+                            className="w-full h-12 bg-gray-100 border-none rounded-xl pl-12 pr-4 focus:ring-2 focus:ring-teal-500/20 font-medium"
+                        />
+                        <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
                     </div>
                 </div>
-             </>
-          )}
-        </div>
-      </div>
-    </header>
-  );
+            )}
+        </header>
+    );
 }

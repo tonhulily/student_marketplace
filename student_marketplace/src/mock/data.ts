@@ -41,7 +41,7 @@ export interface ChatSession {
 }
 
 export const CURRENT_USER: User = {
-  id: 'me',
+  id: 'abc@sis.hust.edu.vn',
   name: 'Bạn',
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
   school: 'Đại học Bách Khoa HN',

@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
-import Button from '../components/Button';
 import { useProducts } from '../contexts/ProductContext';
 import { useCart } from '../contexts/CartContext';
-import { Search, ShoppingCart, SlidersHorizontal, X, ChevronDown, Check } from 'lucide-react';
+import { ShoppingCart, SlidersHorizontal, X, ChevronDown, Check, Search } from 'lucide-react';
+import Button from '../components/Button';
 
-// --- COMPONENT: DUAL RANGE SLIDER ---
+// --- DUAL RANGE SLIDER COMPONENT (Giữ nguyên logic cũ) ---
 interface DualRangeSliderProps {
     min: number;
     max: number;
@@ -21,14 +21,12 @@ const DualRangeSlider = ({ min, max, onChange, initialValues }: DualRangeSliderP
     const maxValRef = useRef(initialValues[1]);
     const range = useRef<HTMLDivElement>(null);
 
-    // Convert to percentage
     const getPercent = (value: number) => Math.round(((value - min) / (max - min)) * 100);
 
     useEffect(() => {
         if (maxValRef.current && range.current) {
             const minPercent = getPercent(minVal);
             const maxPercent = getPercent(maxValRef.current);
-
             if (range.current) {
                 range.current.style.left = `${minPercent}%`;
                 range.current.style.width = `${maxPercent - minPercent}%`;
@@ -40,7 +38,6 @@ const DualRangeSlider = ({ min, max, onChange, initialValues }: DualRangeSliderP
         if (minValRef.current && range.current) {
             const minPercent = getPercent(minValRef.current);
             const maxPercent = getPercent(maxVal);
-
             if (range.current) {
                 range.current.style.width = `${maxPercent - minPercent}%`;
             }
@@ -51,7 +48,6 @@ const DualRangeSlider = ({ min, max, onChange, initialValues }: DualRangeSliderP
         onChange([minVal, maxVal]);
     }, [minVal, maxVal]);
 
-    // FIX: Đổi màu núm kéo (Thumb) thành màu Teal, viền Trắng cho dễ nhìn
     const thumbStyles = "pointer-events-none absolute h-0 w-full outline-none z-[3] appearance-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-teal-600 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-teal-600 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white";
 
     return (
@@ -80,7 +76,6 @@ const DualRangeSlider = ({ min, max, onChange, initialValues }: DualRangeSliderP
                 }}
                 className={`${thumbStyles} z-[4]`}
             />
-
             <div className="relative w-full">
                 <div className="absolute w-full h-1.5 bg-gray-200 rounded-full z-[1]" />
                 <div ref={range} className="absolute h-1.5 bg-teal-600 rounded-full z-[2]" />
@@ -93,13 +88,14 @@ const DualRangeSlider = ({ min, max, onChange, initialValues }: DualRangeSliderP
 export default function MarketPage() {
     const { products } = useProducts();
     const { addToCart } = useCart();
+    const [searchParams, setSearchParams] = useSearchParams();
     
-    // States
-    const [searchTerm, setSearchTerm] = useState('');
+    // Lấy từ khóa trực tiếp từ URL
+    const searchTerm = searchParams.get('search') || '';
+
+    // States Filter
     const [category, setCategory] = useState('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    
-    // FIX: State mới để lọc sản phẩm còn hàng
     const [showAvailableOnly, setShowAvailableOnly] = useState(true);
 
     const globalMaxPrice = useMemo(() => Math.max(...products.map(p => p.price), 1000000), [products]);
@@ -113,9 +109,6 @@ export default function MarketPage() {
 
     // Filtering Logic
     const filteredProducts = products.filter(product => {
-        // FIX: Logic lọc theo trạng thái "Còn hàng"
-        // Nếu showAvailableOnly = true -> Chỉ lấy status 'available'
-        // Nếu showAvailableOnly = false -> Lấy cả 'available' và 'sold' (loại bỏ 'pending' vì chưa duyệt)
         if (product.status === 'pending') return false; 
         if (showAvailableOnly && product.status !== 'available') return false;
 
@@ -134,74 +127,80 @@ export default function MarketPage() {
         return price;
     };
 
+    const handleResetFilter = () => {
+        setCategory('all');
+        setPriceRange([0, globalMaxPrice]);
+        setShowAvailableOnly(true);
+        setSearchParams({}); // Xóa search param trên URL
+    };
+
     return (
         <div className="min-h-screen bg-[#F8F9FC] pb-20">
             <Header />
 
             <main className="max-w-6xl mx-auto px-4 mt-8">
                 
-                {/* TOP BAR */}
+                {/* HEAD SECTION: Chỉ còn Tiêu đề & Nút Lọc */}
                 <div className="flex flex-col md:flex-row gap-4 mb-8 items-start md:items-center justify-between relative z-30">
                     
-                    {/* Search Bar */}
-                    <div className="relative flex-1 w-full md:max-w-xl">
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm giáo trình, đồ dùng..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-14 pl-12 pr-4 rounded-2xl border-none bg-white shadow-sm focus:ring-2 focus:ring-teal-500/20 text-gray-800 placeholder-gray-400 font-medium"
-                        />
-                        <Search className="absolute left-4 top-4 text-gray-400" size={24} />
+                    {/* Tiêu đề thay đổi dựa trên trạng thái tìm kiếm */}
+                    <div className="flex-1">
+                        {searchTerm ? (
+                            <div className="animate-in fade-in slide-in-from-left-2">
+                                <p className="text-gray-500 font-medium mb-1">Kết quả tìm kiếm cho</p>
+                                <h1 className="text-2xl md:text-3xl font-black text-gray-900 truncate">"{searchTerm}"</h1>
+                            </div>
+                        ) : (
+                            <div className="animate-in fade-in slide-in-from-bottom-2 text-center">
+        <h1 className="text-5xl md:text-5xl font-black tracking-tight text-gray-900 mb-2">
+            Dạo <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">chợ</span>
+        </h1>
+        <p className="text-base md:text-base text-gray-500 font-medium max-w-lg mx-auto">
+            Khám phá các món đồ sinh viên giá tốt
+        </p>
+    </div>
+                        )}
                     </div>
 
-                    {/* Filter Toggle Button */}
-                    <div className="relative">
+                    {/* Filter Button */}
+                    <div className="relative self-end md:self-auto">
                         <button 
                             onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className={`h-14 px-6 rounded-2xl flex items-center gap-2 font-bold shadow-sm transition-all border
+                            className={`h-12 px-6 rounded-2xl flex items-center gap-2 font-bold shadow-sm transition-all border
                                 ${isFilterOpen 
-                                    ? 'bg-teal-600 text-white border-teal-600' 
+                                    ? 'bg-teal-600 text-white border-teal-600 shadow-teal-500/30' 
                                     : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'
                                 }`}
                         >
                             <SlidersHorizontal size={20} />
-                            <span className="hidden sm:inline">Bộ lọc</span>
+                            <span>Bộ lọc</span>
                             {/* Dot indicator */}
                             {(category !== 'all' || priceRange[0] > globalMinPrice || priceRange[1] < globalMaxPrice || !showAvailableOnly) && (
-                                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[#F8F9FC]"></span>
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[#F8F9FC] flex items-center justify-center text-[8px] text-white"></span>
                             )}
                         </button>
 
                         {/* FILTER DROPDOWN PANEL */}
                         {isFilterOpen && (
-                            <div className="absolute right-0 top-16 w-[340px] bg-white rounded-3xl shadow-xl border border-gray-100 p-6 z-40 animate-in fade-in slide-in-from-top-2">
+                            <div className="absolute right-0 top-14 w-[340px] bg-white rounded-3xl shadow-xl border border-gray-100 p-6 z-40 animate-in fade-in slide-in-from-top-2">
                                 <div className="flex justify-between items-center mb-6">
                                     <h3 className="font-bold text-lg text-gray-900">Bộ lọc tìm kiếm</h3>
-                                    <button onClick={() => setIsFilterOpen(false)} className="text-gray-400 hover:text-gray-600">
+                                    <button onClick={() => setIsFilterOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-full transition-colors">
                                         <X size={20} />
                                     </button>
                                 </div>
 
-                                {/* FIX: Checkbox "Còn hàng" */}
-                                <div className="mb-6 p-4 bg-gray-50 rounded-2xl">
-                                    <label className="flex items-center justify-between cursor-pointer group">
-                                        <span className="text-sm font-bold text-gray-700">Còn hàng</span>
-                                        <div className="relative">
-                                            <input 
-                                                type="checkbox" 
-                                                checked={showAvailableOnly} 
-                                                onChange={(e) => setShowAvailableOnly(e.target.checked)}
-                                                className="hidden" 
-                                            />
-                                            <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${showAvailableOnly ? 'bg-teal-600 border-teal-600' : 'border-gray-300 bg-white'}`}>
-                                                {showAvailableOnly && <Check size={14} className="text-white" />}
-                                            </div>
+                                {/* Checkbox Còn hàng */}
+                                <div className="mb-6 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => setShowAvailableOnly(!showAvailableOnly)}>
+                                    <label className="flex items-center justify-between cursor-pointer pointer-events-none">
+                                        <span className="text-sm font-bold text-gray-700">Chỉ hiện hàng còn</span>
+                                        <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${showAvailableOnly ? 'bg-teal-600 border-teal-600' : 'border-gray-300 bg-white'}`}>
+                                            {showAvailableOnly && <Check size={14} className="text-white" />}
                                         </div>
                                     </label>
                                 </div>
 
-                                {/* Categories Filter */}
+                                {/* Danh mục */}
                                 <div className="mb-6">
                                     <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">Danh mục</label>
                                     <div className="relative">
@@ -219,7 +218,7 @@ export default function MarketPage() {
                                     </div>
                                 </div>
 
-                                {/* Price Range Slider */}
+                                {/* Khoảng giá */}
                                 <div className="mb-8">
                                     <div className="flex justify-between items-end mb-4">
                                         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Khoảng giá</label>
@@ -241,15 +240,10 @@ export default function MarketPage() {
                                     </div>
                                 </div>
 
-                                {/* Reset Action */}
                                 <Button 
-                                    onClick={() => {
-                                        setCategory('all');
-                                        setPriceRange([0, globalMaxPrice]);
-                                        setShowAvailableOnly(true); // Reset về mặc định
-                                    }}
+                                    onClick={handleResetFilter}
                                     variant="outline"
-                                    className="w-full rounded-xl border-gray-200 text-gray-500 hover:bg-gray-50"
+                                    className="w-full rounded-xl border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                                 >
                                     Xóa bộ lọc
                                 </Button>
@@ -259,41 +253,41 @@ export default function MarketPage() {
                 </div>
 
                 {/* PRODUCT LIST */}
-                <h2 className="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
-                    Kết quả tìm kiếm 
-                    <span className="text-sm font-normal text-gray-500 bg-gray-200 px-2 py-1 rounded-lg">
+                <div className="flex items-center gap-2 mb-6">
+                    <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">Số lượng:</span>
+                    <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-sm font-bold">
                         {filteredProducts.length}
                     </span>
-                </h2>
+                </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     {filteredProducts.map(product => (
-                        <div key={product.id} className={`bg-white p-4 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-md transition-shadow group ${product.status === 'sold' ? 'opacity-70' : ''}`}>
+                        <div key={product.id} className={`bg-white p-4 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-md transition-all group ${product.status === 'sold' ? 'opacity-70' : ''}`}>
                             <Link to={`/product/${product.id}`} className="block relative aspect-square rounded-2xl overflow-hidden bg-gray-100 mb-4">
                                 <img 
                                     src={product.image} 
                                     alt={product.title} 
-                                    className={`w-full h-full object-cover transition-transform duration-300 ${product.status !== 'sold' ? 'group-hover:scale-105' : 'grayscale'}`}
+                                    className={`w-full h-full object-cover transition-transform duration-500 ${product.status !== 'sold' ? 'group-hover:scale-110' : 'grayscale'}`}
                                 />
                                 {product.status === 'sold' && (
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                        <span className="bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide">Đã bán</span>
+                                        <span className="bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow-lg">Đã bán</span>
                                     </div>
                                 )}
-                                <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
+                                <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm border border-gray-100">
                                     {product.condition}
                                 </div>
                             </Link>
 
                             <div className="space-y-2">
                                 <div className="flex items-start justify-between">
-                                    <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-lg truncate max-w-[70%]">
+                                    <span className="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-1 rounded-lg truncate max-w-[70%] border border-teal-100">
                                         {product.category}
                                     </span>
                                 </div>
                                 
                                 <Link to={`/product/${product.id}`}>
-                                    <h3 className="font-bold text-gray-900 line-clamp-2 min-h-[2.5rem] group-hover:text-teal-600 transition-colors">
+                                    <h3 className="font-bold text-gray-900 line-clamp-2 min-h-[2.5rem] text-sm md:text-base group-hover:text-teal-600 transition-colors">
                                         {product.title}
                                     </h3>
                                 </Link>
@@ -302,23 +296,23 @@ export default function MarketPage() {
                                     <span className="font-black text-lg text-gray-900">
                                         {product.price.toLocaleString()}đ
                                     </span>
-                                    {/* Chỉ hiện nút thêm giỏ hàng nếu chưa bán */}
                                     {product.status === 'available' ? (
                                         <button 
                                             onClick={() => addToCart(product)}
-                                            className="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-teal-600 transition-colors shadow-lg shadow-gray-900/20"
+                                            className="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-teal-600 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-gray-900/20"
+                                            title="Thêm vào giỏ"
                                         >
-                                            <ShoppingCart size={14} />
+                                            <ShoppingCart size={16} />
                                         </button>
                                     ) : (
-                                        <div className="w-8 h-8 flex items-center justify-center text-gray-300">
-                                            <ShoppingCart size={14} />
+                                        <div className="w-9 h-9 flex items-center justify-center text-gray-300 bg-gray-50 rounded-full cursor-not-allowed">
+                                            <ShoppingCart size={16} />
                                         </div>
                                     )}
                                 </div>
                                 
-                                <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
-                                    <img src={product.seller.avatar} className="w-5 h-5 rounded-full" alt="" />
+                                <div className="flex items-center gap-2 pt-3 border-t border-gray-50 mt-1">
+                                    <img src={product.seller.avatar} className="w-5 h-5 rounded-full object-cover border border-gray-100" alt="" />
                                     <span className="text-xs text-gray-500 font-medium truncate">{product.seller.name}</span>
                                 </div>
                             </div>
@@ -326,21 +320,17 @@ export default function MarketPage() {
                     ))}
                 </div>
 
+                {/* Empty State */}
                 {filteredProducts.length === 0 && (
-                    <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-gray-300">
-                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                    <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-gray-200 mt-4">
+                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
                             <Search size={32} />
                         </div>
                         <h3 className="font-bold text-gray-900 text-lg">Không tìm thấy sản phẩm</h3>
-                        <p className="text-gray-500">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                        <p className="text-gray-500 mt-1">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                         <button 
-                            onClick={() => {
-                                setSearchTerm('');
-                                setCategory('all');
-                                setPriceRange([0, globalMaxPrice]);
-                                setShowAvailableOnly(false); // Reset để hiện tất cả
-                            }}
-                            className="mt-4 text-teal-600 font-bold hover:underline"
+                            onClick={handleResetFilter}
+                            className="mt-6 text-teal-600 font-bold hover:underline bg-teal-50 px-6 py-2 rounded-xl"
                         >
                             Xóa hết bộ lọc
                         </button>
